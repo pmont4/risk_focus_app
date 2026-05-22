@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate } from "react-router";
 import { MainPage } from "../pages/MainPage";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Footer } from "../components/Footer";
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -12,15 +13,20 @@ export const RiskFocusApp = () => {
 
     return (
         <QueryClientProvider client={queryClient}>
-            <Routes>
-                <Route index element={<Navigate to="/evaluate" replace />} />
-                <Route path="/evaluate" element={<MainPage />} />
+            <div className="d-flex flex-column min-vh-100">
+                <Routes>
+                    <Route index element={<Navigate to="/evaluate" replace />} />
+                    <Route path="/evaluate" element={<MainPage />} />
 
-                <Route
-                    path="*"
-                    element={<Navigate to="/evaluate" replace />}
-                />
-            </Routes>
+                    <Route
+                        path="*"
+                        element={<Navigate to="/evaluate" replace />}
+                    />
+                </Routes>
+
+                <Footer />
+            </div>
         </QueryClientProvider>
-    )
+    );
+
 }
