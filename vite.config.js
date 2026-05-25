@@ -8,4 +8,18 @@ export default defineConfig({
     react(),
     babel({ presets: [reactCompilerPreset()] })
   ],
+  base: '/',
+  build: {
+    outDir: 'dist'
+  },
+  server: {
+    port: 5173,
+    proxy: {
+      '/riskfocus/': {
+        target: 'http://localhost:8080',
+        changeOrigin: true,
+        secure: false,
+      }
+    }
+  }
 })

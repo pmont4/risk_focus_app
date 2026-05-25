@@ -1,4 +1,10 @@
+import { useState } from "react";
+import { SideMenuNav } from "./SideMenuNav";
+import { ReportListView } from "./views/ReportListView";
+
 export const MainModal = () => {
+
+    const [view, setView] = useState('view_reports');
 
     return (
         <>
@@ -14,16 +20,51 @@ export const MainModal = () => {
                 alignItems: 'center',
                 justifyContent: 'center'
             }}>
-                <div className="bg-white shadow-lg rounded-4 d-flex flex-column" style={{
+                <div className="bg-white shadow-lg rounded-4 d-flex user-select-none" style={{
                     width: '86vw',
                     height: '83vh',
-                    padding: '2rem',
-                    overflow: 'auto'
+                    overflow: 'hidden'
                 }}>
+                    <SideMenuNav view={view} setView={setView} />
+                    {/* MAIN CONTENT */}
+                    <div style={{
+                        flex: 1,
+                        padding: '2rem',
+                        overflowY: 'auto',
+                        backgroundColor: '#ffffff'
+                    }}>
+                        {/* Renderizado condicional basado en la opción seleccionada (estado 'view') */}
+                        {view === 'view_reports' && (
+                            <ReportListView />
+                        )}
+                        {view === 'view_daily_reports' && (
+                            <div>
+                                <h2>Reportes Diarios</h2>
+                                <p>Aquí puedes ver y gestionar los reportes del día.</p>
+                            </div>
+                        )}
+                        {view === 'view_weekly_reports' && (
+                            <div>
+                                <h2>Reportes Semanales</h2>
+                                <p>Aquí puedes ver el resumen semanal de actividades.</p>
+                            </div>
+                        )}
+                        {view === 'view_inventory' && (
+                            <div>
+                                <h2>Inventario</h2>
+                                <p>Gestión del inventario actual.</p>
+                            </div>
+                        )}
+                        {view === 'view_settings' && (
+                            <div>
+                                <h2>Configuración</h2>
+                                <p>Ajustes generales del sistema.</p>
+                            </div>
+                        )}
+                    </div>
 
                 </div>
             </div>
         </>
     );
-
 }
