@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { SideMenuNav } from "./SideMenuNav";
 import { ReportListView } from "./views/ReportListView";
+import { AnimatedWindow } from "./animation/AnimatedWindow";
 
 export const MainModal = () => {
 
@@ -34,9 +35,12 @@ export const MainModal = () => {
                         overflowY: 'auto',
                         backgroundColor: '#ffffff'
                     }}>
-                        {view === 'view_reports' && (
-                            <ReportListView />
-                        )}
+                        <AnimatedWindow
+                            condition={view === 'view_reports'}
+                            children={
+                                <ReportListView />
+                            }
+                        />
                     </div>
 
                 </div>
