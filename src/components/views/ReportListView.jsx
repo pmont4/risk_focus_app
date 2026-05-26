@@ -20,11 +20,8 @@ export const ReportListView = () => {
             {reportList.length === 0 ? (
                 <p>No hay reportes disponibles.</p>
             ) : (
-                reportList.map((report, index) => (
-                    <div key={index} className="card p-3 shadow-sm">
-                        <pre className="mb-0">{JSON.stringify(report, null, 2)}</pre>
-                    </div>
-                ))
+                <>
+                </>
             )}
         </div>
     );

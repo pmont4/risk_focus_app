@@ -30,7 +30,6 @@ export const SideMenuNav = ({ setView }) => {
         }
     ];
 
-
     return (
         <>
             <div style={{
@@ -64,11 +63,11 @@ export const SideMenuNav = ({ setView }) => {
                             }}
                             style={{
                                 backgroundColor: activeView === item.id || (item.subItems && item.subItems.some(subItem => subItem.id === activeView)) ? '#b4cce4ff' : 'transparent',
-                                color: '#333'
+                                color: activeView === item.id || (item.subItems && item.subItems.some(subItem => subItem.id === activeView)) ? '#6b6b6bff' : '#333'
                             }}
                             onMouseOver={(e) => {
                                 if (activeView !== item.id && !(item.subItems && item.subItems.some(subItem => subItem.id === activeView))) {
-                                    e.target.style.backgroundColor = '#f1f3f5';
+                                    e.target.style.backgroundColor = '#dadadaff';
                                 }
                             }}
                             onMouseOut={(e) => {
@@ -98,7 +97,7 @@ export const SideMenuNav = ({ setView }) => {
                                         }}
                                         onMouseOver={(e) => {
                                             if (activeView !== subItem.id) {
-                                                e.target.style.backgroundColor = '#f1f3f5';
+                                                e.target.style.backgroundColor = '#dadadaff';
                                             }
                                         }}
                                         onMouseOut={(e) => {
