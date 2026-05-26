@@ -25,7 +25,7 @@ export const MainModal = () => {
                     height: '83vh',
                     overflow: 'hidden'
                 }}>
-                    <SideMenuNav view={view} setView={setView} />
+                    <SideMenuNav setView={setView} />
                     {/* MAIN CONTENT */}
                     <div style={{
                         flex: 1,
