@@ -2,6 +2,7 @@ import { useState } from "react";
 import { SideMenuNav } from "./SideMenuNav";
 import { ReportListView } from "./views/ReportListView";
 import { AnimatedWindow } from "./animation/AnimatedWindow";
+import { PlantListView } from "./views/PlantListView";
 
 export const MainModal = () => {
 
@@ -39,6 +40,12 @@ export const MainModal = () => {
                             condition={view === 'view_reports'}
                             children={
                                 <ReportListView />
+                            }
+                        />
+                        <AnimatedWindow
+                            condition={view === 'view_plants'}
+                            children={
+                                <PlantListView />
                             }
                         />
                     </div>

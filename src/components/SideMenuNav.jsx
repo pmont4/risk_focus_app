@@ -4,7 +4,7 @@ import logo from '../img/gpi_risk_focus_logo.png';
 export const SideMenuNav = ({ setView }) => {
 
     const [expandedMenus, setExpandedMenus] = useState({
-        generate: true
+        generate: true,
     });
 
     const [activeView, setActiveView] = useState('view_reports');
@@ -19,6 +19,11 @@ export const SideMenuNav = ({ setView }) => {
             id: 'view_reports',
             label: 'Reportes existentes',
             action: () => setView('view_reports')
+        },
+        {
+            id: 'plants',
+            label: 'Plantas',
+            action: () => setView('view_plants'),
         },
         {
             id: 'generate',
@@ -55,7 +60,7 @@ export const SideMenuNav = ({ setView }) => {
                             onClick={() => {
                                 if (item.action) item.action();
 
-                                if (item.id != "generate") {
+                                if (item.id != "generate" && item.id != "plants") {
                                     toggleMenu(item.id)
                                 }
 

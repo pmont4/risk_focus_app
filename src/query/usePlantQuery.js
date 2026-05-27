@@ -1,0 +1,29 @@
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { plantKeys } from "./plantKeys";
+import { plantAPI_GetAll } from "./api/API";
+
+export const usePlantQuery = () => {
+
+    const useGetAll = () => {
+        return useQuery({
+            queryKey: plantKeys.plants(),
+            placeholderData: keepPreviousData,
+            queryFn: async () => {
+                const res = await plantAPI_GetAll.get('');
+                if (res.status !== 200) throw new Error(`HTTP ${res.status}`);
+
+                const data = res.data;
+                const arrayData = Array.isArray(data) ? data : [data];
+
+                return arrayData;
+            },
+            staleTime: 30_000,
+            refetchOnWindowFocus: true,
+        });
+    }
+
+    return {
+        useGetAll,
+    };
+
+}
