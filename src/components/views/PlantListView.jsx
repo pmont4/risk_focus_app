@@ -1,10 +1,8 @@
-import { useState } from "react";
 import { usePlantQuery } from "../../query/usePlantQuery";
 import { PlantCard } from "./view_components/PlantCard";
+import { AddButton } from "./view_components/AddButton";
 
 export const PlantListView = () => {
-
-    const [isHovered, setIsHovered] = useState(false);
 
     const { useGetAll } = usePlantQuery();
     const { data: plants = [], isLoading, isError } = useGetAll();
@@ -34,38 +32,13 @@ export const PlantListView = () => {
             <div className="d-flex flex-column gap-2">
                 <div className="d-flex justify-content-between align-items-center w-100 mb-1">
                     <h2 className="m-0 fw-bold" style={{ color: '#2c3e50' }}>Lista de Plantas</h2>
-
-                    <button
-                        className="btn btn-success d-flex align-items-center shadow-sm"
-                        style={{
-                            borderRadius: '50px',
-                            height: '40px',
-                            width: isHovered ? '165px' : '40px',
-                            padding: 0,
-                            justifyContent: 'flex-start',
-                            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                            overflow: 'hidden',
-                            whiteSpace: 'nowrap'
+                    <AddButton
+                        idleElement={<i className="bi bi-plus-lg" style={{ fontSize: '1.2rem', minWidth: '40px', textAlign: 'center' }}></i>}
+                        hoveringElement="Agregar planta"
+                        clickAction={() => {
+                            console.log('Agregar planta click');
                         }}
-                        onMouseEnter={() => setIsHovered(true)}
-                        onMouseLeave={() => setIsHovered(false)}
-                        onClick={() => console.log('Agregar planta click')}
-                    >
-                        <i className="bi bi-plus-lg" style={{ fontSize: '1.2rem', minWidth: '40px', textAlign: 'center' }}></i>
-                        <span
-                            style={{
-                                opacity: isHovered ? 1 : 0,
-                                transform: isHovered ? 'translateX(0)' : 'translateX(-10px)',
-                                transition: 'all 0.3s ease',
-                                fontWeight: '600',
-                                fontSize: '0.95rem',
-                                paddingRight: '16px'
-                            }}
-                        >
-                            Agregar planta
-                        </span>
-                    </button>
-
+                    />
                 </div>
                 <div
                     style={{
