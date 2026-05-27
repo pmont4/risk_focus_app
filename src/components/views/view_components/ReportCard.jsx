@@ -34,19 +34,26 @@ export const ReportCard = ({ report }) => {
                 <div className="mb-4 flex-grow-1 d-flex flex-column">
                     <div className="bg-light p-3 rounded mb-4 text-dark" style={{ fontSize: '0.85rem' }}>
                         <div className="mb-2">
-                            <strong className="text-primary">Dirección:</strong> <br />
+                            <strong>Dirección:</strong> <br />
                             <span className="text-secondary">{report?.report?.plant?.addressPlant || "Dirección no registrada"}</span>
                         </div>
                         <div>
-                            <strong className="text-primary">Coordenadas:</strong> <br />
+                            <strong>Coordenadas:</strong> <br />
                             <span className="text-secondary">Lat: {report?.report?.plant?.latitudePlant || "N/A"} | Lng: {report?.report?.plant?.longitudePlant || "N/A"}</span>
                         </div>
                     </div>
 
                     <div className="mt-auto">
-                        <h6 className="fw-bold mb-2 text-dark" style={{ fontSize: '0.9rem' }}>
-                            Top {threats.length > 0 ? threats.length : ''} Amenazas Potenciales:
-                        </h6>
+                        <div className="d-flex justify-content-between align-items-end mb-2">
+                            <h6 className="fw-bold mb-0 text-dark" style={{ fontSize: '0.9rem' }}>
+                                Top {threats.length > 0 ? threats.length : ''} Amenazas Potenciales:
+                            </h6>
+                            {threats.length > 0 && (
+                                <span className="text-muted text-uppercase" style={{ fontSize: '0.7rem', fontWeight: '700', letterSpacing: '0.5px' }}>
+                                    Puntaje
+                                </span>
+                            )}
+                        </div>
                         {threats.length > 0 ? (
                             <ul className="list-unstyled mb-0" style={{ fontSize: '0.85rem' }}>
                                 {threats.map((hazardItem, idx) => {
@@ -77,17 +84,29 @@ export const ReportCard = ({ report }) => {
                 {/* Footer */}
                 <div className="mt-auto">
                     <button
-                        className="btn btn-primary w-100 fw-semibold shadow-sm"
+                        className="btn btn-primary w-100 fw-semibold shadow-sm position-relative overflow-hidden d-flex justify-content-center align-items-center"
                         style={{
                             padding: '0.6rem 1rem',
                             borderRadius: '8px',
-                            letterSpacing: '0.3px'
+                            letterSpacing: '0.3px',
+                            border: 'none',
+                            backgroundColor: '#0d6efd'
                         }}
                         onClick={() => {
                             console.log('hola');
                         }}
                     >
-                        Ver reporte completo
+                        <div
+                            style={{
+                                position: 'absolute',
+                                left: '-2px', // Asegura que cubra completamente el borde izquierdo sin huecos
+                                top: 0,
+                                bottom: 0,
+                                width: '30px', // Franja más delgada, por lo que la curva se pega más a la izquierda
+                                background: 'radial-gradient(circle at 150% 50%, transparent 28px, #f28120 31px)'
+                            }}
+                        />
+                        <span style={{ position: 'relative', zIndex: 1 }}>Ver reporte completo</span>
                     </button>
                 </div>
             </div>

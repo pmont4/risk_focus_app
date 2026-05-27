@@ -33,7 +33,7 @@ export const ReportListView = () => {
                 <div
                     style={{
                         height: '4px',
-                        background: 'linear-gradient(to right, #0d6efd, #0d6efd 15%, transparent 100%)',
+                        background: 'linear-gradient(to right, #000000ff, #202020ff 15%, transparent 100%)',
                         borderRadius: '2px',
                         width: '100%',
                     }}
