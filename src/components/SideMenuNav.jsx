@@ -1,7 +1,7 @@
 import { useState } from "react";
 import logo from '../img/gpi_risk_focus_logo.png';
 
-export const SideMenuNav = ({ setView }) => {
+export const SideMenuNav = ({ setView, sideMenuDisabled }) => {
 
     const [expandedMenus, setExpandedMenus] = useState({
         generate: true,
@@ -80,6 +80,7 @@ export const SideMenuNav = ({ setView }) => {
                                     e.target.style.backgroundColor = 'transparent';
                                 }
                             }}
+                            disabled={sideMenuDisabled}
                         >
                             {item.label}
                         </button>
@@ -110,6 +111,7 @@ export const SideMenuNav = ({ setView }) => {
                                                 e.target.style.backgroundColor = 'transparent';
                                             }
                                         }}
+                                        disabled={sideMenuDisabled}
                                     >
                                         {subItem.label}
                                     </button>

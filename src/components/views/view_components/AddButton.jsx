@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-export const AddButton = ({ idleElement, hoveringElement, clickAction }) => {
+export const AddButton = ({ idleElement, hoveringElement, clickAction, disabled = false }) => {
 
     const [isHovered, setIsHovered] = useState(false);
 
@@ -18,10 +18,20 @@ export const AddButton = ({ idleElement, hoveringElement, clickAction }) => {
                     overflow: 'hidden',
                     whiteSpace: 'nowrap'
                 }}
-                onMouseEnter={() => setIsHovered(true)}
-                onMouseLeave={() => setIsHovered(false)}
+                onMouseEnter={() => {
+                    if (!disabled) {
+                        setIsHovered(true);
+                    }
+                }}
+                onMouseLeave={() => {
+                    if (!disabled) {
+                        setIsHovered(false);
+                    }
+                }}
                 onClick={() => {
-                    clickAction();
+                    if (!disabled) {
+                        clickAction();
+                    }
                 }}
             >
                 {idleElement}

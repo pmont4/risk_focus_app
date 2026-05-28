@@ -1,11 +1,17 @@
 import { usePlantQuery } from "../../query/usePlantQuery";
 import { PlantCard } from "./view_components/PlantCard";
 import { AddButton } from "./view_components/AddButton";
+import { useRef, useState } from "react";
+import { DraggableWindow } from "./draggableWindow/DraggableWindow";
 
-export const PlantListView = () => {
+export const PlantListView = ({ sideMenuDisabled, setSideMenuDisabled }) => {
+
+    const winRef = useRef(null);
 
     const { useGetAll } = usePlantQuery();
     const { data: plants = [], isLoading, isError } = useGetAll();
+
+    const [isCreating, setIsCreating] = useState(false);
 
     if (isLoading) {
         return (
@@ -26,9 +32,29 @@ export const PlantListView = () => {
         );
     }
 
+    const openPlantCreation = () => {
+        setIsCreating(true);
+        setSideMenuDisabled(true);
+    };
+
+    const closePlantCreate = () => {
+        setIsCreating(false);
+        setSideMenuDisabled(false);
+    }
 
     return (
         <div className="d-flex flex-column gap-4 p-3 w-100">
+            <DraggableWindow
+                ref={winRef}
+                isOpen={isCreating}
+                onClose={closePlantCreate}
+                title="Nueva Planta"
+                width={560}
+                height={"auto"}
+                children={
+                    <></>
+                }
+            />
             <div className="d-flex flex-column gap-2">
                 <div className="d-flex justify-content-between align-items-center w-100 mb-1">
                     <h2 className="m-0 fw-bold" style={{ color: '#2c3e50' }}>Lista de Plantas</h2>
@@ -36,8 +62,9 @@ export const PlantListView = () => {
                         idleElement={<i className="bi bi-plus-lg" style={{ fontSize: '1.2rem', minWidth: '40px', textAlign: 'center' }}></i>}
                         hoveringElement="Agregar planta"
                         clickAction={() => {
-                            console.log('Agregar planta click');
+                            openPlantCreation();
                         }}
+                        disabled={sideMenuDisabled}
                     />
                 </div>
                 <div

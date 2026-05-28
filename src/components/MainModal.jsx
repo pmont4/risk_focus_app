@@ -7,6 +7,7 @@ import { PlantListView } from "./views/PlantListView";
 export const MainModal = () => {
 
     const [view, setView] = useState('view_reports');
+    const [sideMenuDisabled, setSideMenuDisabled] = useState(false);
 
     return (
         <>
@@ -28,7 +29,7 @@ export const MainModal = () => {
                     overflow: 'hidden',
                     backgroundColor: '#f3f3f3ff'
                 }}>
-                    <SideMenuNav setView={setView} />
+                    <SideMenuNav setView={setView} sideMenuDisabled={sideMenuDisabled} />
                     {/* MAIN CONTENT */}
                     <div style={{
                         flex: 1,
@@ -45,7 +46,10 @@ export const MainModal = () => {
                         <AnimatedWindow
                             condition={view === 'view_plants'}
                             children={
-                                <PlantListView />
+                                <PlantListView
+                                    sideMenuDisabled={sideMenuDisabled}
+                                    setSideMenuDisabled={setSideMenuDisabled}
+                                />
                             }
                         />
                     </div>
