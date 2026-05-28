@@ -3,6 +3,7 @@ import { PlantCard } from "./view_components/PlantCard";
 import { AddButton } from "./view_components/AddButton";
 import { useRef, useState } from "react";
 import { DraggableWindow } from "./draggableWindow/DraggableWindow";
+import { PlantCreationForm } from "./forms/PlantCreationForm";
 
 export const PlantListView = ({ sideMenuDisabled, setSideMenuDisabled }) => {
 
@@ -52,7 +53,7 @@ export const PlantListView = ({ sideMenuDisabled, setSideMenuDisabled }) => {
                 width={560}
                 height={"auto"}
                 children={
-                    <></>
+                    <PlantCreationForm onClose={closePlantCreate} getSwalTarget={winRef.current?.getSwalTarget} />
                 }
             />
             <div className="d-flex flex-column gap-2">
@@ -92,7 +93,7 @@ export const PlantListView = ({ sideMenuDisabled, setSideMenuDisabled }) => {
                 >
                     {plants.map((item, index) => {
                         return (
-                            <PlantCard key={index} plant={item} />
+                            <PlantCard key={index} plant={item} sideMenuDisabled={sideMenuDisabled} setSideMenuDisabled={setSideMenuDisabled} />
                         );
                     })}
                 </div>

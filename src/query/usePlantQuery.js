@@ -1,6 +1,6 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { plantKeys } from "./plantKeys";
-import { plantAPI_GetAll } from "./api/API";
+import { plantAPI } from "./api/API";
 
 export const usePlantQuery = () => {
 
@@ -9,7 +9,7 @@ export const usePlantQuery = () => {
             queryKey: plantKeys.plants(),
             placeholderData: keepPreviousData,
             queryFn: async () => {
-                const res = await plantAPI_GetAll.get('');
+                const res = await plantAPI.get('');
                 if (res.status !== 200) throw new Error(`HTTP ${res.status}`);
 
                 const data = res.data;

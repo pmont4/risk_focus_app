@@ -6,6 +6,6 @@ export const reportyAPI_GetAll = axios.create({
     baseURL: BASE_URL + "report/"
 });
 
-export const plantAPI_GetAll = axios.create({
+export const plantAPI = axios.create({
     baseURL: BASE_URL + "plant/"
 });
