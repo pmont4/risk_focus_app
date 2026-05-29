@@ -3,6 +3,7 @@ import { SideMenuNav } from "./SideMenuNav";
 import { ReportListView } from "./views/ReportListView";
 import { AnimatedWindow } from "./animation/AnimatedWindow";
 import { PlantListView } from "./views/PlantListView";
+import { BaseReportGenerationView } from "./views/reportCreation/BaseReportGenerationView";
 
 export const MainModal = () => {
 
@@ -50,6 +51,31 @@ export const MainModal = () => {
                                     sideMenuDisabled={sideMenuDisabled}
                                     setSideMenuDisabled={setSideMenuDisabled}
                                 />
+                            }
+                        />
+                        <AnimatedWindow
+                            condition={view === 'view_base_report_generation'}
+                            children={
+                                <BaseReportGenerationView
+                                    sideMenuDisabled={sideMenuDisabled}
+                                    setSideMenuDisabled={setSideMenuDisabled}
+                                />
+                            }
+                        />
+                        <AnimatedWindow
+                            condition={view === 'view_areas'}
+                            children={
+                                <>
+                                    areas
+                                </>
+                            }
+                        />
+                        <AnimatedWindow
+                            condition={view === 'view_ponderation'}
+                            children={
+                                <>
+                                    ponderacion
+                                </>
                             }
                         />
                     </div>

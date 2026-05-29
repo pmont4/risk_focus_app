@@ -107,13 +107,28 @@ export const PlantCard = ({ plant, sideMenuDisabled, setSideMenuDisabled }) => {
                 }
             />
             <div className="card-body d-flex flex-column p-4">
-                <div className="d-flex justify-content-between align-items-start mb-3 pb-3 border-bottom">
-                    <div style={{ maxWidth: '70%' }}>
-                        <h4 className="card-title fw-bold mb-1 text-primary text-truncate" title={plantName}>
-                            {plantName}
-                        </h4>
+                <div className="mb-4 border-bottom pb-3 d-flex align-items-center justify-content-between gap-3">
+                    <div className="d-flex align-items-center gap-3" style={{ minWidth: 0, flex: 1 }}>
+                        <div 
+                            className="rounded-3 d-flex align-items-center justify-content-center bg-light"
+                            style={{
+                                width: '42px',
+                                height: '42px',
+                                border: '1px solid #dee2e6',
+                                color: '#0d6efd',
+                                boxShadow: '0 2px 4px rgba(0,0,0,0.02)',
+                                flexShrink: 0
+                            }}
+                        >
+                            <i className="bi bi-building-fill" style={{ fontSize: '1.25rem' }}></i>
+                        </div>
+                        <div style={{ minWidth: 0, flex: 1 }}>
+                            <h4 className="card-title fw-bold mb-0 text-truncate" title={plantName} style={{ color: '#2c3e50', fontSize: '1.15rem' }}>
+                                {plantName}
+                            </h4>
+                        </div>
                     </div>
-                    <div className="d-flex gap-2">
+                    <div className="d-flex gap-2" style={{ flexShrink: 0 }}>
                         <button
                             className="btn btn-sm btn-primary shadow-sm"
                             title="Editar Planta"
@@ -121,7 +136,7 @@ export const PlantCard = ({ plant, sideMenuDisabled, setSideMenuDisabled }) => {
                             disabled={sideMenuDisabled}
                             onClick={openEditForm}
                         >
-                            <i class="bi bi-pencil-fill"></i>
+                            <i className="bi bi-pencil-fill"></i>
                         </button>
                         <button
                             className="btn btn-sm btn-danger shadow-sm"
@@ -132,7 +147,7 @@ export const PlantCard = ({ plant, sideMenuDisabled, setSideMenuDisabled }) => {
                                 deletePlant(plant.idPlant);
                             }}
                         >
-                            <i class="bi bi-trash-fill"></i>
+                            <i className="bi bi-trash-fill"></i>
                         </button>
                     </div>
                 </div>

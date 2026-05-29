@@ -30,7 +30,8 @@ export const SideMenuNav = ({ setView, sideMenuDisabled }) => {
             label: 'Generar reporte',
             action: () => setView('view_base_report_generation'),
             subItems: [
-                { id: 'base', label: 'Generar reporte base', action: () => setView('view_base_report_generation') },
+                { id: 'areas', label: 'Administrar áreas', action: () => setView('view_areas') },
+                { id: 'ponderation', label: 'Generar ponderación', action: () => setView('view_ponderation') }
             ]
         }
     ];

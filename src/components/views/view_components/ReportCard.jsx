@@ -1,5 +1,8 @@
+import { useState } from "react";
+
 export const ReportCard = ({ report }) => {
 
+    const [isHovered, setIsHovered] = useState(false);
     const threats = report?.topFiveHazards || [];
     const stage = report?.report?.stage;
 
@@ -31,16 +34,32 @@ export const ReportCard = ({ report }) => {
         >
             <div className="card-body d-flex flex-column p-4">
                 {/* Header */}
-                <div className="mb-3 border-bottom pb-3 d-flex justify-content-between align-items-start">
-                    <div style={{ maxWidth: '65%' }}>
-                        <h4 className="card-title fw-bold mb-1 text-primary text-truncate" title={report?.report?.plant?.namePlant || "Planta Reporte #1"}>
-                            {report?.report?.plant?.namePlant || "Planta Reporte #1"}
-                        </h4>
-                        <h6 className="card-subtitle text-muted" style={{ fontSize: '0.85rem', fontWeight: '500' }}>
-                            {report?.report?.reportDate || "Fecha no especificada"}
-                        </h6>
+                <div className="mb-4 border-bottom pb-3 d-flex align-items-center justify-content-between gap-3">
+                    <div className="d-flex align-items-center gap-3" style={{ minWidth: 0, flex: 1 }}>
+                        <div 
+                            className="rounded-3 d-flex align-items-center justify-content-center bg-light"
+                            style={{
+                                width: '42px',
+                                height: '42px',
+                                border: '1px solid #dee2e6',
+                                color: '#0d6efd',
+                                boxShadow: '0 2px 4px rgba(0,0,0,0.02)',
+                                flexShrink: 0
+                            }}
+                        >
+                            <i className="bi bi-file-earmark-bar-graph-fill" style={{ fontSize: '1.25rem' }}></i>
+                        </div>
+                        <div style={{ minWidth: 0, flex: 1 }}>
+                            <h4 className="card-title fw-bold mb-1 text-truncate" title={report?.report?.plant?.namePlant || "Planta Reporte #1"} style={{ color: '#2c3e50', fontSize: '1.15rem' }}>
+                                {report?.report?.plant?.namePlant || "Planta Reporte #1"}
+                            </h4>
+                            <h6 className="card-subtitle text-muted mb-0 d-flex align-items-center gap-1" style={{ fontSize: '0.8rem', fontWeight: '500' }}>
+                                <i className="bi bi-calendar3" style={{ fontSize: '0.75rem' }}></i>
+                                {report?.report?.reportDate || "Fecha no especificada"}
+                            </h6>
+                        </div>
                     </div>
-                    <div>
+                    <div style={{ flexShrink: 0 }}>
                         <span className="badge" style={{ backgroundColor: '#e8f5e9', color: '#2e7d32', padding: '0.5rem 0.8rem', borderRadius: '8px', fontWeight: '600', fontSize: '0.75rem', border: '1px solid #c8e6c9' }}>
                             {stageText}
                         </span>
@@ -111,6 +130,8 @@ export const ReportCard = ({ report }) => {
                             cursor: isCompleted ? 'pointer' : 'not-allowed'
                         }}
                         disabled={!isCompleted}
+                        onMouseEnter={() => isCompleted && setIsHovered(true)}
+                        onMouseLeave={() => setIsHovered(false)}
                         onClick={() => {
                             console.log('hola');
                         }}
@@ -121,8 +142,10 @@ export const ReportCard = ({ report }) => {
                                 left: '-2px', // Asegura que cubra completamente el borde izquierdo sin huecos
                                 top: 0,
                                 bottom: 0,
-                                width: '30px', // Franja más delgada, por lo que la curva se pega más a la izquierda
-                                background: isCompleted ? 'radial-gradient(circle at 150% 50%, transparent 28px, #f28120 31px)' : 'radial-gradient(circle at 150% 50%, transparent 28px, #6c757d 31px)'
+                                width: isHovered ? 'calc(100% + 4px)' : '30px', // Franja animada
+                                background: isCompleted ? 'radial-gradient(circle at 150% 50%, transparent 28px, #f28120 31px)' : 'radial-gradient(circle at 150% 50%, transparent 28px, #6c757d 31px)',
+                                transition: 'width 0.35s cubic-bezier(0.4, 0, 0.2, 1)',
+                                zIndex: 0
                             }}
                         />
                         <span style={{ position: 'relative', zIndex: 1 }}>
