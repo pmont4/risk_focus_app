@@ -1,5 +1,5 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
-import { reportKeys } from './reportKeys';
+import { reportKeys } from './keys/reportKeys';
 import { reportyAPI_GetAll } from './api/API';
 
 export const useReportQuery = () => {

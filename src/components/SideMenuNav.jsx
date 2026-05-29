@@ -27,7 +27,7 @@ export const SideMenuNav = ({ setView, sideMenuDisabled }) => {
         },
         {
             id: 'generate',
-            label: 'Generar reportes',
+            label: 'Generar reporte',
             action: () => setView('view_base_report_generation'),
             subItems: [
                 { id: 'base', label: 'Generar reporte base', action: () => setView('view_base_report_generation') },

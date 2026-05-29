@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { plantKeys } from "../plantKeys";
+import { plantKeys } from "../keys/plantKeys";
 import { plantAPI } from "../api/API";
 
 export const usePlantMutation = () => {

@@ -1,15 +1,15 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { plantKeys } from "./keys/plantKeys";
-import { plantAPI } from "./api/API";
+import { hazardKeys } from "./keys/hazardKeys";
+import { hazardsAPI } from "./api/API";
 
-export const usePlantQuery = () => {
+export const useHazardQuery = () => {
 
     const useGetAll = () => {
         return useQuery({
-            queryKey: plantKeys.plants(),
+            queryKey: hazardKeys.hazards(),
             placeholderData: keepPreviousData,
             queryFn: async () => {
-                const res = await plantAPI.get('');
+                const res = await hazardsAPI.get('');
                 if (res.status !== 200) throw new Error(`HTTP ${res.status}`);
 
                 const data = res.data;
