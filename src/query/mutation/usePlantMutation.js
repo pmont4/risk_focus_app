@@ -41,9 +41,24 @@ export const usePlantMutation = () => {
         },
     });
 
+    const deleteMutation = useMutation({
+        mutationKey: ['plants', 'delete'],
+        mutationFn: (plantId) => plantAPI.delete(`/${plantId}`).then(res => res.data),
+
+        onSuccess(_data, plantId) {
+            patchAllLists((curr) => curr?.filter(it => it.idPlant !== plantId));
+        },
+
+        async onSettled() {
+            await qc.invalidateQueries({ queryKey: baseKey, refetchType: 'active' });
+        },
+    });
+
     const create = (payload, opts) => createMutation.mutate(payload, opts);
     const update = (payload, opts) => updateMutation.mutate(payload, opts);
+    const remove = (plantId, opts) => deleteMutation.mutate(plantId, opts);
+    const removeAsync = (plantId) => deleteMutation.mutateAsync(plantId);
 
-    return { create, update }
+    return { create, update, remove, removeAsync }
 
 }

@@ -83,7 +83,7 @@ export const PlantCreationForm = ({ onClose, getSwalTarget, plant }) => {
                     icon: 'success',
                     title: successMsg
                 });
-                if (onClose) onClose();
+                if (onClose) onClose(true);
             },
             onError: () => {
                 Toast.fire({

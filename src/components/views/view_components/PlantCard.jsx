@@ -1,10 +1,22 @@
 import { useState, useRef } from "react";
 import { DraggableWindow } from "../draggableWindow/DraggableWindow";
 import { PlantCreationForm } from "../forms/PlantCreationForm";
+import Swal from "sweetalert2";
+import { usePlantMutation } from "../../../query/mutation/usePlantMutation";
 
 export const PlantCard = ({ plant, sideMenuDisabled, setSideMenuDisabled }) => {
 
     const winRef = useRef(null);
+
+    const Toast = Swal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timerProgressBar: true,
+        timer: 2500,
+    });
+
+    const { removeAsync } = usePlantMutation();
 
     const [isEditing, setIsEditing] = useState(false);
 
@@ -18,9 +30,52 @@ export const PlantCard = ({ plant, sideMenuDisabled, setSideMenuDisabled }) => {
         setIsEditing(true);
     };
 
-    const closeEditForm = () => {
-        setSideMenuDisabled(false);
-        setIsEditing(false);
+    const closeEditForm = (isSaving) => {
+        if (!isSaving) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Cancelacion de edición de planta',
+                text: '¿Estas seguro de salir? los cambios de la planta no serán guardados.',
+                showCancelButton: true,
+                confirmButtonText: 'Si, salir',
+                cancelButtonText: 'No, cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    setSideMenuDisabled(false);
+                    setIsEditing(false);
+                }
+            });
+        } else {
+            setSideMenuDisabled(false);
+            setIsEditing(false);
+        }
+    };
+
+    const deletePlant = (plantId) => {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Eliminacion de planta',
+            text: `¿Estas seguro de eliminar la planta "${plantName}"?`,
+            showCancelButton: true,
+            confirmButtonText: 'Si, eliminar',
+            cancelButtonText: 'No, cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                removeAsync(plantId)
+                    .then(() => {
+                        Toast.fire({
+                            icon: 'success',
+                            title: "Planta eliminada correctamente"
+                        });
+                    })
+                    .catch(() => {
+                        Toast.fire({
+                            icon: 'error',
+                            title: "Error al eliminar la planta"
+                        });
+                    });
+            }
+        });
     };
 
     return (
@@ -43,12 +98,12 @@ export const PlantCard = ({ plant, sideMenuDisabled, setSideMenuDisabled }) => {
             <DraggableWindow
                 ref={winRef}
                 isOpen={isEditing}
-                onClose={closeEditForm}
+                onClose={() => closeEditForm(false)}
                 title="Editar Planta"
                 width={560}
                 height={"auto"}
                 children={
-                    <PlantCreationForm plant={plant} onClose={closeEditForm} getSwalTarget={winRef.current?.getSwalTarget} />
+                    <PlantCreationForm plant={plant} onClose={() => closeEditForm(true)} getSwalTarget={winRef.current?.getSwalTarget} />
                 }
             />
             <div className="card-body d-flex flex-column p-4">
@@ -73,7 +128,9 @@ export const PlantCard = ({ plant, sideMenuDisabled, setSideMenuDisabled }) => {
                             title="Eliminar Planta"
                             style={{ borderRadius: '6px', width: '32px', height: '32px', padding: '0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                             disabled={sideMenuDisabled}
-                            onClick={() => console.log('Eliminar planta', plant)}
+                            onClick={() => {
+                                deletePlant(plant.idPlant);
+                            }}
                         >
                             <i class="bi bi-trash-fill"></i>
                         </button>

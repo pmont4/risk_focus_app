@@ -4,6 +4,7 @@ import { AddButton } from "./view_components/AddButton";
 import { useRef, useState } from "react";
 import { DraggableWindow } from "./draggableWindow/DraggableWindow";
 import { PlantCreationForm } from "./forms/PlantCreationForm";
+import Swal from "sweetalert2";
 
 export const PlantListView = ({ sideMenuDisabled, setSideMenuDisabled }) => {
 
@@ -38,9 +39,25 @@ export const PlantListView = ({ sideMenuDisabled, setSideMenuDisabled }) => {
         setSideMenuDisabled(true);
     };
 
-    const closePlantCreate = () => {
-        setIsCreating(false);
-        setSideMenuDisabled(false);
+    const closePlantCreate = (isSaving) => {
+        if (!isSaving) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Cancelacion de creacion de planta',
+                text: '¿Estas seguro de salir? la nueva planta no será guardada.',
+                showCancelButton: true,
+                confirmButtonText: 'Si, salir',
+                cancelButtonText: 'No, cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    setIsCreating(false);
+                    setSideMenuDisabled(false);
+                }
+            });
+        } else {
+            setIsCreating(false);
+            setSideMenuDisabled(false);
+        }
     }
 
     return (
@@ -48,7 +65,7 @@ export const PlantListView = ({ sideMenuDisabled, setSideMenuDisabled }) => {
             <DraggableWindow
                 ref={winRef}
                 isOpen={isCreating}
-                onClose={closePlantCreate}
+                onClose={() => closePlantCreate(false)}
                 title="Nueva Planta"
                 width={560}
                 height={"auto"}
