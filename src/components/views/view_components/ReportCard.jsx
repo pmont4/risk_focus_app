@@ -1,6 +1,16 @@
 export const ReportCard = ({ report }) => {
 
     const threats = report?.topFiveHazards || [];
+    const stage = report?.report?.stage;
+
+    const stageMapping = {
+        INITIAL_REPORT: "Iniciando reporte",
+        EVALUATING_AREAS: "Evaluando areas",
+        HAZARD_PONDERATION_SUMMARY_GENERATED: "Ponderación generada",
+    };
+
+    const stageText = stageMapping[stage] || stage || "Estado desconocido";
+    const isCompleted = stage === "HAZARD_PONDERATION_SUMMARY_GENERATED";
 
     return (
         <div
@@ -21,13 +31,20 @@ export const ReportCard = ({ report }) => {
         >
             <div className="card-body d-flex flex-column p-4">
                 {/* Header */}
-                <div className="mb-3 border-bottom pb-3">
-                    <h4 className="card-title fw-bold mb-1 text-primary text-truncate" title={report?.report?.plant?.namePlant || "Planta Reporte #1"}>
-                        {report?.report?.plant?.namePlant || "Planta Reporte #1"}
-                    </h4>
-                    <h6 className="card-subtitle text-muted" style={{ fontSize: '0.85rem', fontWeight: '500' }}>
-                        {report?.report?.reportDate || "Fecha no especificada"}
-                    </h6>
+                <div className="mb-3 border-bottom pb-3 d-flex justify-content-between align-items-start">
+                    <div style={{ maxWidth: '65%' }}>
+                        <h4 className="card-title fw-bold mb-1 text-primary text-truncate" title={report?.report?.plant?.namePlant || "Planta Reporte #1"}>
+                            {report?.report?.plant?.namePlant || "Planta Reporte #1"}
+                        </h4>
+                        <h6 className="card-subtitle text-muted" style={{ fontSize: '0.85rem', fontWeight: '500' }}>
+                            {report?.report?.reportDate || "Fecha no especificada"}
+                        </h6>
+                    </div>
+                    <div>
+                        <span className="badge" style={{ backgroundColor: '#e8f5e9', color: '#2e7d32', padding: '0.5rem 0.8rem', borderRadius: '8px', fontWeight: '600', fontSize: '0.75rem', border: '1px solid #c8e6c9' }}>
+                            {stageText}
+                        </span>
+                    </div>
                 </div>
 
                 {/* Main content */}
@@ -84,14 +101,16 @@ export const ReportCard = ({ report }) => {
                 {/* Footer */}
                 <div className="mt-auto">
                     <button
-                        className="btn btn-primary w-100 fw-semibold shadow-sm position-relative overflow-hidden d-flex justify-content-center align-items-center"
+                        className={`btn w-100 fw-semibold shadow-sm position-relative overflow-hidden d-flex justify-content-center align-items-center ${isCompleted ? 'btn-primary' : 'btn-secondary'}`}
                         style={{
                             padding: '0.6rem 1rem',
                             borderRadius: '8px',
                             letterSpacing: '0.3px',
                             border: 'none',
-                            backgroundColor: '#0d6efd'
+                            opacity: isCompleted ? 1 : 0.65,
+                            cursor: isCompleted ? 'pointer' : 'not-allowed'
                         }}
+                        disabled={!isCompleted}
                         onClick={() => {
                             console.log('hola');
                         }}
@@ -103,10 +122,12 @@ export const ReportCard = ({ report }) => {
                                 top: 0,
                                 bottom: 0,
                                 width: '30px', // Franja más delgada, por lo que la curva se pega más a la izquierda
-                                background: 'radial-gradient(circle at 150% 50%, transparent 28px, #f28120 31px)'
+                                background: isCompleted ? 'radial-gradient(circle at 150% 50%, transparent 28px, #f28120 31px)' : 'radial-gradient(circle at 150% 50%, transparent 28px, #6c757d 31px)'
                             }}
                         />
-                        <span style={{ position: 'relative', zIndex: 1 }}>Ver reporte completo</span>
+                        <span style={{ position: 'relative', zIndex: 1 }}>
+                            {isCompleted ? 'Ver reporte completo' : 'Reporte no disponible'}
+                        </span>
                     </button>
                 </div>
             </div>
