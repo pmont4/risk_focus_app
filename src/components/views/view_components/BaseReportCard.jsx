@@ -1,12 +1,27 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { DraggableWindow } from "../draggableWindow/DraggableWindow";
+import { HazardTableView } from "../HazardTableView";
+export const BaseReportCard = ({ report, sideMenuDisabled, setSideMenuDisabled }) => {
 
-export const BaseReportCard = ({ report }) => {
+    const winRef = useRef(null);
 
     const [hoverThreats, setHoverThreats] = useState(false);
     const [hoverCriteria, setHoverCriteria] = useState(false);
 
     const plantName = report?.report?.plant?.namePlant || "Planta Reporte";
     const reportDate = report?.report?.reportDate || "Fecha no especificada";
+
+    const [isWatchingHazards, setIsWatchingHazards] = useState(false);
+
+    const openHazardViewer = () => {
+        setIsWatchingHazards(true);
+        setSideMenuDisabled(true);
+    }
+
+    const closeHazardViewer = () => {
+        setIsWatchingHazards(false);
+        setSideMenuDisabled(false);
+    }
 
     return (
         <div
@@ -25,10 +40,21 @@ export const BaseReportCard = ({ report }) => {
                 e.currentTarget.style.boxShadow = '0 .125rem .25rem rgba(0,0,0,.075)';
             }}
         >
+            <DraggableWindow
+                ref={winRef}
+                isOpen={isWatchingHazards}
+                onClose={closeHazardViewer}
+                title="Amenazas del Reporte"
+                width={1360}
+                height={"auto"}
+                children={
+                    <HazardTableView report={report} onClose={closeHazardViewer} />
+                }
+            />
             <div className="card-body d-flex flex-column p-4">
                 {/* Header */}
                 <div className="mb-4 border-bottom pb-3 d-flex align-items-center gap-3">
-                    <div 
+                    <div
                         className="rounded-3 d-flex align-items-center justify-content-center bg-light"
                         style={{
                             width: '42px',
@@ -66,9 +92,8 @@ export const BaseReportCard = ({ report }) => {
                             }}
                             onMouseEnter={() => setHoverThreats(true)}
                             onMouseLeave={() => setHoverThreats(false)}
-                            onClick={() => {
-                                console.log('Ver amenazas del reporte:', report?.report?.idReport);
-                            }}
+                            disabled={sideMenuDisabled}
+                            onClick={openHazardViewer}
                         >
                             <div
                                 style={{

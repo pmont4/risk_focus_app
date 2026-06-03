@@ -75,7 +75,7 @@ export const BaseReportGenerationView = ({ sideMenuDisabled, setSideMenuDisabled
                 >
                     {reportList.map((item, index) => {
                         return (
-                            <BaseReportCard key={index} report={item} />
+                            <BaseReportCard key={index} report={item} sideMenuDisabled={sideMenuDisabled} setSideMenuDisabled={setSideMenuDisabled} />
                         );
                     })}
                 </div>
