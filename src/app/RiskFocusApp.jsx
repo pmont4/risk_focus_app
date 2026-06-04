@@ -15,12 +15,12 @@ export const RiskFocusApp = () => {
         <QueryClientProvider client={queryClient}>
             <div className="d-flex flex-column min-vh-100">
                 <Routes>
-                    <Route index element={<Navigate to="/evaluate" replace />} />
-                    <Route path="/evaluate" element={<MainPage />} />
+                    <Route index element={<Navigate to="/riskfocus" replace />} />
+                    <Route path="/riskfocus" element={<MainPage />} />
 
                     <Route
                         path="*"
-                        element={<Navigate to="/evaluate" replace />}
+                        element={<Navigate to="/riskfocus" replace />}
                     />
                 </Routes>
 

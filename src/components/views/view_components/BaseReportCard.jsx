@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { DraggableWindow } from "../draggableWindow/DraggableWindow";
 import { HazardTableView } from "../HazardTableView";
+
 export const BaseReportCard = ({ report, sideMenuDisabled, setSideMenuDisabled }) => {
 
     const winRef = useRef(null);
@@ -48,7 +49,7 @@ export const BaseReportCard = ({ report, sideMenuDisabled, setSideMenuDisabled }
                 width={1360}
                 height={"auto"}
                 children={
-                    <HazardTableView report={report} onClose={closeHazardViewer} />
+                    <HazardTableView report={report?.report} onClose={closeHazardViewer} />
                 }
             />
             <div className="card-body d-flex flex-column p-4">

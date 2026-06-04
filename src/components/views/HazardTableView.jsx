@@ -2,29 +2,27 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Swal from "sweetalert2";
 import { useHazardQuery } from "../../query/useHazardQuery";
+import { useReportMutation } from "../../query/mutation/useReportMutation";
 
 export const HazardTableView = ({ report, onClose, onSave }) => {
 
     const { useGetAll } = useHazardQuery();
     const { data: allHazards = [], isLoading, isError } = useGetAll();
 
+    const { updateHazards } = useReportMutation();
+
     const [availableHazards, setAvailableHazards] = useState([]);
     const [reportHazards, setReportHazards] = useState([]);
 
-    // Para identificar qué elemento estamos arrastrando
     const [draggedHazardId, setDraggedHazardId] = useState(null);
 
-    // Inicializar las listas una vez que tengamos los datos
+    // Initialize data.
     useEffect(() => {
         if (allHazards.length > 0) {
-            // Asumimos que el reporte tiene sus hazards en report.report.hazards o report.hazards
-            const currentReportHazards = report?.report?.hazards || report?.hazards || [];
+            const currentReportHazards = report?.hazards || [];
 
-            // Extraer los IDs de las amenazas que ya están en el reporte para filtrar
             const reportHazardIds = new Set(currentReportHazards.map(h => h.idHazard));
 
-            // Si el reporte ya viene con las amenazas populadas, usamos esas (para no perder datos extra si los hay)
-            // Si no, podríamos buscarlas en allHazards. Vamos a usar allHazards como fuente de verdad para el renderizado consistente.
             const initialReportHazards = allHazards.filter(h => reportHazardIds.has(h.idHazard));
             const initialAvailableHazards = allHazards.filter(h => !reportHazardIds.has(h.idHazard));
 
@@ -33,7 +31,7 @@ export const HazardTableView = ({ report, onClose, onSave }) => {
         }
     }, [allHazards, report]);
 
-    // Función para agrupar amenazas por categoría
+    // Group hazards by category
     const groupHazardsByCategory = (hazardsArray) => {
         return hazardsArray.reduce((acc, hazard) => {
             const categoryName = hazard?.typeHazard?.nameTypeHazard || 'Sin Categoría';
@@ -52,10 +50,9 @@ export const HazardTableView = ({ report, onClose, onSave }) => {
     const handleDragStart = (e, hazardId) => {
         setDraggedHazardId(hazardId);
         e.dataTransfer.setData("hazardId", hazardId);
-        // Efecto visual al arrastrar
+
         e.dataTransfer.effectAllowed = "move";
 
-        // Timeout para que no desaparezca inmediatamente el original mientras se arrastra (bug en Chrome)
         setTimeout(() => {
             if (e.target) e.target.style.opacity = '0.5';
         }, 0);
@@ -67,7 +64,7 @@ export const HazardTableView = ({ report, onClose, onSave }) => {
     };
 
     const handleDragOver = (e) => {
-        e.preventDefault(); // Necesario para permitir el drop
+        e.preventDefault();
         e.dataTransfer.dropEffect = "move";
     };
 
@@ -76,7 +73,7 @@ export const HazardTableView = ({ report, onClose, onSave }) => {
         const hazardIdStr = e.dataTransfer.getData("hazardId");
         if (!hazardIdStr) return;
 
-        const hazardId = Number(hazardIdStr) || hazardIdStr; // Por si el ID es numérico
+        const hazardId = Number(hazardIdStr) || hazardIdStr;
 
         if (destination === "report") {
             moveHazard(hazardId, availableHazards, setAvailableHazards, reportHazards, setReportHazards);
@@ -86,7 +83,7 @@ export const HazardTableView = ({ report, onClose, onSave }) => {
         setDraggedHazardId(null);
     };
 
-    // Función genérica para mover una amenaza de una lista a otra
+    // Function to move a hazard from one list to another
     const moveHazard = (hazardId, sourceList, setSourceList, destList, setDestList) => {
         const hazardToMove = sourceList.find(h => h.idHazard === hazardId || String(h.idHazard) === String(hazardId));
         if (!hazardToMove) return;
@@ -96,39 +93,37 @@ export const HazardTableView = ({ report, onClose, onSave }) => {
     };
 
     const handleSave = () => {
-        // Acoplar la lista de hazards a la estructura completa del reporte
-        let updatedReport;
-        if (report?.report) {
-            updatedReport = {
-                ...report,
-                report: {
-                    ...report.report,
-                    hazards: reportHazards
+        let updatedReport = {
+            ...report,
+            hazards: reportHazards
+        };
+
+        updateHazards(updatedReport, {
+            onSuccess: () => {
+                if (onSave) {
+                    onSave(updatedReport);
                 }
-            };
-        } else {
-            updatedReport = {
-                ...report,
-                hazards: reportHazards
-            };
-        }
 
-        // Log para visualizar la estructura del JSON del reporte completo actualizado
-        console.log("JSON del Reporte completo a guardar:", JSON.stringify(updatedReport, null, 2));
-
-        if (onSave) {
-            onSave(updatedReport);
-        }
-
-        // Aquí simulamos el guardado de los hazards en el reporte actual.
-        // Se puede emitir el array a un backend o actualizar el estado del parent.
-        Swal.fire({
-            title: 'Reporte actualizado',
-            text: 'Revisa la consola para ver el JSON completo del reporte actualizado.',
-            icon: 'success',
-            confirmButtonColor: '#0d6efd'
-        }).then(() => {
-            if (onClose) onClose();
+                Swal.fire({
+                    title: 'Reporte actualizado',
+                    text: 'Puede actualizar las ponderaciones del reporte',
+                    icon: 'success',
+                    confirmButtonColor: '#0d6efd',
+                    timer: 2000,
+                }).then(() => {
+                    if (onClose) onClose();
+                });
+            },
+            onError: (error) => {
+                console.error("Error al actualizar reporte:", error);
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Hubo un problema al actualizar el reporte',
+                    icon: 'error',
+                    confirmButtonColor: '#0d6efd',
+                    timer: 5000,
+                });
+            }
         });
     };
 
@@ -150,7 +145,6 @@ export const HazardTableView = ({ report, onClose, onSave }) => {
         );
     }
 
-    // Renderizador de listas por categoría
     const renderHazardList = (groupedData, droppableId) => {
         const categories = Object.keys(groupedData).sort();
 
@@ -258,7 +252,7 @@ export const HazardTableView = ({ report, onClose, onSave }) => {
     };
 
     return (
-        <div className="d-flex flex-column" style={{ backgroundColor: '#ffffff', height: '70vh', minHeight: '500px', maxHeight: '800px' }}>
+        <div className="d-flex flex-column user-select-none" style={{ backgroundColor: '#ffffff', height: '70vh', minHeight: '500px', maxHeight: '800px' }}>
 
             {/* Header / Top bar */}
             <div className="d-flex justify-content-between align-items-center p-4 border-bottom bg-light">
