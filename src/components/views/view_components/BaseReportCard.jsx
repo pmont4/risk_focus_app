@@ -153,6 +153,7 @@ export const BaseReportCard = ({ report, sideMenuDisabled, setSideMenuDisabled }
                             }}
                             onMouseEnter={() => setHoverCriteria(true)}
                             onMouseLeave={() => setHoverCriteria(false)}
+                            disabled={sideMenuDisabled}
                             onClick={openCriteriaViewer}
                         >
                             <div

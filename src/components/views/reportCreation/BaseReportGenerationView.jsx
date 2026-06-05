@@ -1,13 +1,20 @@
 import { useReportQuery } from "../../../query/useReportQuery";
 import { BaseReportCard } from "../view_components/BaseReportCard";
 import { AddButton } from "../view_components/AddButton";
+import { DraggableWindow } from "../draggableWindow/DraggableWindow";
+import { useState, useRef } from "react";
+import { BaseReportCreationView } from "./BaseReportCreationView";
 import Swal from "sweetalert2";
 
 export const BaseReportGenerationView = ({ sideMenuDisabled, setSideMenuDisabled }) => {
 
+    const winRef = useRef(null);
+
     const { useGetAll } = useReportQuery();
 
     const { data: reportList = [], isLoading, isError } = useGetAll();
+
+    const [isCreating, setIsCreating] = useState(false);
 
     if (isLoading) {
         return (
@@ -29,17 +36,39 @@ export const BaseReportGenerationView = ({ sideMenuDisabled, setSideMenuDisabled
     }
 
     const handleCreateReport = () => {
+        setIsCreating(true);
+        setSideMenuDisabled(true);
+    };
+
+    const handleCloseCreateReport = () => {
         Swal.fire({
-            title: 'Crear Reporte',
-            text: 'La funcionalidad para crear un nuevo reporte base estará disponible próximamente.',
-            icon: 'info',
-            confirmButtonText: 'Entendido',
-            confirmButtonColor: '#0d6efd'
+            icon: 'warning',
+            title: 'Cancelacion de creación de reporte',
+            text: '¿Estas seguro de salir? la información del reporte en progreso no será guardada.',
+            showCancelButton: true,
+            confirmButtonText: 'Si, salir',
+            cancelButtonText: 'No, cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                setIsCreating(false);
+                setSideMenuDisabled(false);
+            }
         });
     };
 
     return (
         <div className="d-flex flex-column gap-4 p-3 w-100">
+            <DraggableWindow
+                ref={winRef}
+                isOpen={isCreating}
+                onClose={handleCloseCreateReport}
+                title="Crear Reporte Base"
+                width={1360}
+                height={"auto"}
+                children={
+                    <BaseReportCreationView sideMenuDisabled={sideMenuDisabled} setSideMenuDisabled={setSideMenuDisabled} />
+                }
+            />
             <div className="d-flex flex-column gap-2">
                 <div className="d-flex justify-content-between align-items-center w-100 mb-1">
                     <h2 className="m-0 fw-bold" style={{ color: '#2c3e50' }}>Reporte base</h2>
