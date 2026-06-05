@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { DraggableWindow } from "../draggableWindow/DraggableWindow";
 import { HazardTableView } from "../HazardTableView";
+import { CriteriaView } from "../CriteriaView";
 
 export const BaseReportCard = ({ report, sideMenuDisabled, setSideMenuDisabled }) => {
 
@@ -13,6 +14,9 @@ export const BaseReportCard = ({ report, sideMenuDisabled, setSideMenuDisabled }
     const reportDate = report?.report?.reportDate || "Fecha no especificada";
 
     const [isWatchingHazards, setIsWatchingHazards] = useState(false);
+    const [isWatchingCriteria, setIsWatchingCriteria] = useState(false);
+
+    // Hazard view
 
     const openHazardViewer = () => {
         setIsWatchingHazards(true);
@@ -21,6 +25,18 @@ export const BaseReportCard = ({ report, sideMenuDisabled, setSideMenuDisabled }
 
     const closeHazardViewer = () => {
         setIsWatchingHazards(false);
+        setSideMenuDisabled(false);
+    }
+
+    // Impact criteria view
+
+    const openCriteriaViewer = () => {
+        setIsWatchingCriteria(true);
+        setSideMenuDisabled(true);
+    }
+
+    const closeCriteriaViewer = () => {
+        setIsWatchingCriteria(false);
         setSideMenuDisabled(false);
     }
 
@@ -52,6 +68,18 @@ export const BaseReportCard = ({ report, sideMenuDisabled, setSideMenuDisabled }
                     <HazardTableView report={report?.report} onClose={closeHazardViewer} />
                 }
             />
+            <DraggableWindow
+                ref={winRef}
+                isOpen={isWatchingCriteria}
+                onClose={closeCriteriaViewer}
+                title="Criterios del Reporte"
+                width={1360}
+                height={"auto"}
+                children={
+                    <CriteriaView report={report?.report} onClose={closeCriteriaViewer} />
+                }
+            />
+
             <div className="card-body d-flex flex-column p-4">
                 {/* Header */}
                 <div className="mb-4 border-bottom pb-3 d-flex align-items-center gap-3">
@@ -125,9 +153,7 @@ export const BaseReportCard = ({ report, sideMenuDisabled, setSideMenuDisabled }
                             }}
                             onMouseEnter={() => setHoverCriteria(true)}
                             onMouseLeave={() => setHoverCriteria(false)}
-                            onClick={() => {
-                                console.log('Ver criterios del reporte:', report?.report?.idReport);
-                            }}
+                            onClick={openCriteriaViewer}
                         >
                             <div
                                 style={{

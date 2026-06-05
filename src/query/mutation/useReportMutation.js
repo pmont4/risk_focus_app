@@ -29,8 +29,38 @@ export const useReportMutation = () => {
         },
     });
 
-    const updateHazards = (payload, opts) => updateHazardsMutation.mutate(payload, opts);
+    const updateCriteriaMutation = useMutation({
+        mutationKey: ['report', 'updateCriteria'],
+        mutationFn: (payload) => reportyAPI_GetAll.put('/updatecriteria', payload).then(res => res.data),
 
-    return { updateHazards }
+        onSuccess(data) {
+            patchAllLists((curr) => curr?.map(it => it.idReport === data.idReport ? data : it));
+            qc.invalidateQueries({ queryKey: reportKeys.reports() });
+        },
+
+        async onSettled() {
+            await qc.invalidateQueries({ queryKey: baseKey, refetchType: 'active' });
+        },
+    });
+
+    const updateProbabilityCriteriaMutation = useMutation({
+        mutationKey: ['report', 'updateProbabilityCriteria'],
+        mutationFn: (payload) => reportyAPI_GetAll.put('/updateprobability', payload).then(res => res.data),
+
+        onSuccess(data) {
+            patchAllLists((curr) => curr?.map(it => it.idReport === data.idReport ? data : it));
+            qc.invalidateQueries({ queryKey: reportKeys.reports() });
+        },
+
+        async onSettled() {
+            await qc.invalidateQueries({ queryKey: baseKey, refetchType: 'active' });
+        },
+    });
+
+    const updateHazards = (payload, opts) => updateHazardsMutation.mutate(payload, opts);
+    const updateCriteria = (payload, opts) => updateCriteriaMutation.mutate(payload, opts);
+    const updateProbability = (payload, opts) => updateProbabilityCriteriaMutation.mutate(payload, opts);
+
+    return { updateHazards, updateCriteria, updateProbability }
 
 }
