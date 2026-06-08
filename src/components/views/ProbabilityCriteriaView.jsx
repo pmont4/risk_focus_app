@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import { useReportMutation } from "../../query/mutation/useReportMutation";
 
-export const ProbabilityCriteriaView = ({ report, onClose }) => {
+export const ProbabilityCriteriaView = ({ report, onClose, isCreatingReport, onCriteriaChange }) => {
 
     const { updateProbability } = useReportMutation();
 
@@ -32,11 +32,22 @@ export const ProbabilityCriteriaView = ({ report, onClose }) => {
 
     const [criteriaData, setCriteriaData] = useState(initialData);
 
+    const [isInitialized, setIsInitialized] = useState(false);
+
     useEffect(() => {
-        if (report?.establishProbabilityCriteria) {
-            setCriteriaData(report.establishProbabilityCriteria);
+        if (!isInitialized) {
+            if (report?.establishProbabilityCriteria) {
+                setCriteriaData(report.establishProbabilityCriteria);
+            }
+            setIsInitialized(true);
         }
-    }, [report]);
+    }, [report, isInitialized]);
+
+    useEffect(() => {
+        if (isCreatingReport && onCriteriaChange) {
+            onCriteriaChange(criteriaData);
+        }
+    }, [criteriaData, isCreatingReport, onCriteriaChange]);
 
     const handleInputChange = (levelKey, fieldKey, value) => {
         setCriteriaData(prev => ({
@@ -80,7 +91,7 @@ export const ProbabilityCriteriaView = ({ report, onClose }) => {
     };
 
     return (
-        <div className="d-flex flex-column user-select-none" style={{ backgroundColor: '#ffffff', height: '100%' }}>
+        <div className="d-flex flex-column user-select-none h-100 w-100" style={{ backgroundColor: '#ffffff' }}>
 
             {/* Header / Top bar */}
             <div className="d-flex justify-content-between align-items-center p-4 border-bottom bg-light">
@@ -88,14 +99,16 @@ export const ProbabilityCriteriaView = ({ report, onClose }) => {
                     <h4 className="fw-bold mb-1" style={{ color: '#2c3e50' }}>Criterios de Probabilidad</h4>
                     <p className="text-muted mb-0" style={{ fontSize: '0.9rem' }}>Define los criterios de probabilidad para cada nivel.</p>
                 </div>
-                <button
-                    onClick={handleSave}
-                    className="btn btn-primary px-4 fw-semibold shadow-sm d-flex align-items-center gap-2"
-                    style={{ borderRadius: '8px', letterSpacing: '0.5px' }}
-                >
-                    <i className="bi bi-save2-fill"></i>
-                    Guardar Cambios
-                </button>
+                {!isCreatingReport && (
+                    <button
+                        onClick={handleSave}
+                        className="btn btn-primary px-4 fw-semibold shadow-sm d-flex align-items-center gap-2"
+                        style={{ borderRadius: '8px', letterSpacing: '0.5px' }}
+                    >
+                        <i className="bi bi-save2-fill"></i>
+                        Guardar Cambios
+                    </button>
+                )}
             </div>
 
             {/* Main Content: Table structure */}

@@ -23,10 +23,17 @@ export const DraggableWindow = forwardRef(function DraggableWindow(
 
     useEffect(() => {
         if (!isOpen) return;
-        const vw = window.innerWidth, vh = window.innerHeight;
-        const w = Math.min(width, vw - 16);
-        const h = Math.min(height, vh - 16);
-        setPos({ x: (vw - w) / 2, y: (vh - h) / 2 });
+        
+        setTimeout(() => {
+            if (!panelRef.current) return;
+            const vw = window.innerWidth, vh = window.innerHeight;
+            const rect = panelRef.current.getBoundingClientRect();
+            
+            const nx = (vw - rect.width) / 2;
+            const ny = Math.max(16, (vh - rect.height) / 2);
+            
+            setPos({ x: nx, y: ny });
+        }, 0);
     }, [isOpen, width, height]);
 
     const clamp = (x, min, max) => Math.min(Math.max(x, min), max);
@@ -86,7 +93,13 @@ export const DraggableWindow = forwardRef(function DraggableWindow(
                 role="dialog"
                 aria-modal="false"
                 aria-label={title}
-                style={{ width, height, transform: `translate3d(${pos.x}px, ${pos.y}px, 0)` }}
+                style={{ 
+                    width, 
+                    height, 
+                    maxWidth: 'calc(100vw - 32px)',
+                    maxHeight: 'calc(100vh - 32px)',
+                    transform: `translate3d(${pos.x}px, ${pos.y}px, 0)` 
+                }}
             >
                 <div ref={handleRef} className="floating-handle">
                     <div className="floating-title">{title}</div>

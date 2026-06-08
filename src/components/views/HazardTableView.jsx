@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 import { useHazardQuery } from "../../query/useHazardQuery";
 import { useReportMutation } from "../../query/mutation/useReportMutation";
 
-export const HazardTableView = ({ report, onClose, onSave }) => {
+export const HazardTableView = ({ report, onClose, onSave, isCreatingReport, onHazardsChange }) => {
 
     const { useGetAll } = useHazardQuery();
     const { data: allHazards = [], isLoading, isError } = useGetAll();
@@ -13,12 +13,21 @@ export const HazardTableView = ({ report, onClose, onSave }) => {
 
     const [availableHazards, setAvailableHazards] = useState([]);
     const [reportHazards, setReportHazards] = useState([]);
+    const [isInitialized, setIsInitialized] = useState(false);
 
     const [draggedHazardId, setDraggedHazardId] = useState(null);
+    const [searchAvailable, setSearchAvailable] = useState("");
+
+    // Notify parent of changes in creation mode
+    useEffect(() => {
+        if (isCreatingReport && onHazardsChange) {
+            onHazardsChange(reportHazards);
+        }
+    }, [reportHazards, isCreatingReport, onHazardsChange]);
 
     // Initialize data.
     useEffect(() => {
-        if (allHazards.length > 0) {
+        if (allHazards.length > 0 && !isInitialized) {
             const currentReportHazards = report?.hazards || [];
 
             const reportHazardIds = new Set(currentReportHazards.map(h => h.idHazard));
@@ -28,8 +37,9 @@ export const HazardTableView = ({ report, onClose, onSave }) => {
 
             setReportHazards(initialReportHazards);
             setAvailableHazards(initialAvailableHazards);
+            setIsInitialized(true);
         }
-    }, [allHazards, report]);
+    }, [allHazards, report, isInitialized]);
 
     // Group hazards by category
     const groupHazardsByCategory = (hazardsArray) => {
@@ -43,7 +53,12 @@ export const HazardTableView = ({ report, onClose, onSave }) => {
         }, {});
     };
 
-    const groupedAvailable = groupHazardsByCategory(availableHazards);
+    const filteredAvailableHazards = availableHazards.filter(hazard =>
+        hazard.nameHazard?.toLowerCase().includes(searchAvailable.toLowerCase()) ||
+        hazard?.typeHazard?.nameTypeHazard?.toLowerCase().includes(searchAvailable.toLowerCase())
+    );
+
+    const groupedAvailable = groupHazardsByCategory(filteredAvailableHazards);
     const groupedReport = groupHazardsByCategory(reportHazards);
 
     // Drag and Drop handlers
@@ -145,8 +160,24 @@ export const HazardTableView = ({ report, onClose, onSave }) => {
         );
     }
 
+    const CATEGORY_ORDER = [
+        "AMENAZAS NATURALES - GEOLÓGICAS E HIDROMETEOROLÓGICAS",
+        "AMENAZAS INDUSTRIALES",
+        "AMENAZAS OCUPACIONALES",
+        "AMENAZA TERRORISMO / FACTOR HUMANO",
+        "AMENAZAS AMBIENTE EXTERNO ORGANIZACIONAL"
+    ];
+
     const renderHazardList = (groupedData, droppableId) => {
-        const categories = Object.keys(groupedData).sort();
+        const categories = Object.keys(groupedData).sort((a, b) => {
+            const indexA = CATEGORY_ORDER.indexOf(a);
+            const indexB = CATEGORY_ORDER.indexOf(b);
+            
+            if (indexA !== -1 && indexB !== -1) return indexA - indexB;
+            if (indexA !== -1) return -1;
+            if (indexB !== -1) return 1;
+            return a.localeCompare(b);
+        });
 
         if (categories.length === 0) {
             return (
@@ -252,26 +283,31 @@ export const HazardTableView = ({ report, onClose, onSave }) => {
     };
 
     return (
-        <div className="d-flex flex-column user-select-none" style={{ backgroundColor: '#ffffff', height: '70vh', minHeight: '500px', maxHeight: '800px' }}>
+        <div className="d-flex flex-column user-select-none h-100 w-100" style={{
+            backgroundColor: '#ffffff',
+            ...(isCreatingReport ? { flexGrow: 1, minHeight: 0 } : { height: '70vh', minHeight: '500px', maxHeight: '800px' })
+        }}>
 
             {/* Header / Top bar */}
-            <div className="d-flex justify-content-between align-items-center p-4 border-bottom bg-light">
+            <div className="d-flex justify-content-between align-items-center px-4 py-3 border-bottom bg-light">
                 <div>
                     <h4 className="fw-bold mb-1" style={{ color: '#2c3e50' }}>Gestión de Amenazas</h4>
                     <p className="text-muted mb-0" style={{ fontSize: '0.9rem' }}>Arrastra las amenazas para incluirlas o excluirlas del reporte.</p>
                 </div>
-                <button
-                    onClick={handleSave}
-                    className="btn btn-primary px-4 fw-semibold shadow-sm d-flex align-items-center gap-2"
-                    style={{ borderRadius: '8px', letterSpacing: '0.5px' }}
-                >
-                    <i className="bi bi-save2-fill"></i>
-                    Guardar Cambios
-                </button>
+                {!isCreatingReport && (
+                    <button
+                        onClick={handleSave}
+                        className="btn btn-primary px-4 fw-semibold shadow-sm d-flex align-items-center gap-2"
+                        style={{ borderRadius: '8px', letterSpacing: '0.5px' }}
+                    >
+                        <i className="bi bi-save2-fill"></i>
+                        Guardar Cambios
+                    </button>
+                )}
             </div>
 
             {/* Main Content: Two Columns */}
-            <div className="d-flex flex-grow-1 p-4 gap-4" style={{ overflow: 'hidden' }}>
+            <div className="d-flex flex-grow-1 p-3 gap-3" style={{ overflow: 'hidden' }}>
 
                 {/* Column 1: Available Hazards */}
                 <div
@@ -283,15 +319,29 @@ export const HazardTableView = ({ report, onClose, onSave }) => {
                         overflow: 'hidden'
                     }}
                 >
-                    <div className="p-3 border-bottom d-flex align-items-center gap-2" style={{ backgroundColor: '#ffffff' }}>
-                        <div className="bg-primary bg-opacity-10 p-2 rounded">
-                            <i className="bi bi-list-task text-primary fs-5"></i>
+                    <div className="px-3 py-2 border-bottom d-flex align-items-center justify-content-between" style={{ backgroundColor: '#ffffff' }}>
+                        <div className="d-flex align-items-center gap-2">
+                            <div className="bg-primary bg-opacity-10 p-2 rounded">
+                                <i className="bi bi-list-task text-primary fs-5"></i>
+                            </div>
+                            <h5 className="fw-bold mb-0 text-dark">Amenazas Disponibles</h5>
                         </div>
-                        <h5 className="fw-bold mb-0 text-dark">Amenazas Disponibles</h5>
+                        <div className="input-group input-group-sm ms-3" style={{ maxWidth: '200px' }}>
+                            <span className="input-group-text bg-light border-end-0">
+                                <i className="bi bi-search text-muted"></i>
+                            </span>
+                            <input
+                                type="text"
+                                className="form-control border-start-0 bg-light ps-0"
+                                placeholder="Buscar amenazas..."
+                                value={searchAvailable}
+                                onChange={(e) => setSearchAvailable(e.target.value)}
+                            />
+                        </div>
                     </div>
 
                     <div
-                        className="flex-grow-1 p-3"
+                        className="flex-grow-1 p-2"
                         style={{ overflowY: 'auto' }}
                         onDragOver={handleDragOver}
                         onDrop={(e) => handleDrop(e, "available")}
@@ -317,7 +367,7 @@ export const HazardTableView = ({ report, onClose, onSave }) => {
                         overflow: 'hidden'
                     }}
                 >
-                    <div className="p-3 border-bottom d-flex align-items-center gap-2" style={{ backgroundColor: '#ffffff' }}>
+                    <div className="px-3 py-2 border-bottom d-flex align-items-center gap-2" style={{ backgroundColor: '#ffffff' }}>
                         <div className="bg-success bg-opacity-10 p-2 rounded">
                             <i className="bi bi-clipboard2-check-fill text-success fs-5"></i>
                         </div>
@@ -325,7 +375,7 @@ export const HazardTableView = ({ report, onClose, onSave }) => {
                     </div>
 
                     <div
-                        className="flex-grow-1 p-3"
+                        className="flex-grow-1 p-2"
                         style={{ overflowY: 'auto' }}
                         onDragOver={handleDragOver}
                         onDrop={(e) => handleDrop(e, "report")}
