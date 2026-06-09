@@ -4,8 +4,7 @@ import { useTypeHazardQuery } from "../../../query/useTypeHazardQuery";
 import Swal from "sweetalert2";
 
 export const HazardCreationView = ({ onClose, getSwalTarget }) => {
-
-    const { create } = useHazardMutation();
+    const { create } = useHazardMutation();
     const { useGetAll } = useTypeHazardQuery();
     
     const { data: typesHazard = [], isLoading: typesLoading } = useGetAll();
@@ -13,10 +12,12 @@ export const HazardCreationView = ({ onClose, getSwalTarget }) => {
     const Toast = Swal.mixin({
         toast: true,
         position: "top-end",
-        target: getSwalTarget?.(),
         showConfirmButton: false,
         timerProgressBar: true,
         timer: 2500,
+        didOpen: (toast) => {
+            toast.style.zIndex = 9999;
+        }
     });
 
     const [formData, setFormData] = useState({

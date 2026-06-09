@@ -47,7 +47,8 @@ export const BaseReportGenerationView = ({ sideMenuDisabled, setSideMenuDisabled
             text: '¿Estas seguro de salir? la información del reporte en progreso no será guardada.',
             showCancelButton: true,
             confirmButtonText: 'Si, salir',
-            cancelButtonText: 'No, cancelar'
+            cancelButtonText: 'No, cancelar',
+            target: winRef.current?.getSwalTarget() || document.body
         }).then((result) => {
             if (result.isConfirmed) {
                 setIsCreating(false);
