@@ -3,9 +3,11 @@ import { BaseReportCreationPlantSelector } from './BaseReportCreationPlantSelect
 import { HazardTableView } from '../HazardTableView';
 import { CriteriaView } from '../CriteriaView';
 
-export const BaseReportCreationView = ({ sideMenuDisabled, setSideMenuDisabled }) => {
+export const BaseReportCreationView = () => {
 
     const [currentStep, setCurrentStep] = useState(1);
+
+    const [insideButtonsDisabled, setInsideButtonsDisabled] = useState(false);
 
     const [reportPayload, setReportPayload] = useState({
         idReport: 0,
@@ -142,6 +144,8 @@ export const BaseReportCreationView = ({ sideMenuDisabled, setSideMenuDisabled }
                             report={reportPayload}
                             isCreatingReport={true}
                             onHazardsChange={handleHazardsChange}
+                            insideButtonsDisabled={insideButtonsDisabled}
+                            setInsideButtonsDisabled={setInsideButtonsDisabled}
                         />
                     </div>
                 ) : currentStep === 3 ? (
@@ -169,6 +173,7 @@ export const BaseReportCreationView = ({ sideMenuDisabled, setSideMenuDisabled }
                     <button
                         className="btn btn-outline-secondary px-4 py-2 d-flex align-items-center fw-medium"
                         onClick={handlePrev}
+                        disabled={insideButtonsDisabled}
                     >
                         <i className="bi bi-arrow-left me-2"></i> Atrás
                     </button>
@@ -177,7 +182,7 @@ export const BaseReportCreationView = ({ sideMenuDisabled, setSideMenuDisabled }
                     <button
                         className="btn btn-primary px-4 py-2 d-flex align-items-center fw-medium shadow-sm"
                         onClick={handleNext}
-                        disabled={currentStep === 1 && !reportPayload.plant}
+                        disabled={insideButtonsDisabled || (currentStep === 1 && !reportPayload.plant)}
                     >
                         Siguiente <i className="bi bi-arrow-right ms-2"></i>
                     </button>
@@ -185,6 +190,7 @@ export const BaseReportCreationView = ({ sideMenuDisabled, setSideMenuDisabled }
                     <button
                         className="btn btn-success px-4 py-2 d-flex align-items-center fw-medium shadow-sm"
                         onClick={() => { /* Lógica para crear el reporte */ }}
+                        disabled={insideButtonsDisabled}
                     >
                         Crear <i className="bi bi-check2 ms-2"></i>
                     </button>
