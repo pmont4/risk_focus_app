@@ -2,17 +2,27 @@ import { useEffect, useState, useCallback } from 'react';
 import { BaseReportCreationPlantSelector } from './BaseReportCreationPlantSelector';
 import { HazardTableView } from '../HazardTableView';
 import { CriteriaView } from '../CriteriaView';
+import { useReportMutation } from '../../../query/mutation/useReportMutation';
+import Swal from 'sweetalert2';
 
-export const BaseReportCreationView = () => {
+export const BaseReportCreationView = ({ onClose }) => {
 
     const [currentStep, setCurrentStep] = useState(1);
 
     const [insideButtonsDisabled, setInsideButtonsDisabled] = useState(false);
 
+    const { createBaseReport } = useReportMutation();
+
     const [reportPayload, setReportPayload] = useState({
         idReport: 0,
         stage: "INITIAL_REPORT",
-        reportDate: new Date().toISOString().split('T')[0], // FECHA_DE_HOY
+        reportDate: (() => {
+            const date = new Date();
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+            return `${day}/${month}/${year}`;
+        })(), // FECHA_DE_HOY
         plant: null,
         hazards: [],
         establishImpactCriteria: null,
@@ -66,6 +76,32 @@ export const BaseReportCreationView = () => {
         if (currentStep > 1) {
             setCurrentStep(currentStep - 1);
         }
+    };
+    
+    const handleCreate = () => {
+        setInsideButtonsDisabled(true);
+        createBaseReport(reportPayload, {
+            onSuccess: () => {
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Reporte creado!',
+                    text: 'El reporte base se ha creado correctamente.',
+                    timer: 2000,
+                    showConfirmButton: false,
+                }).then(() => {
+                    if (onClose) onClose();
+                });
+            },
+            onError: (error) => {
+                console.error("Error creating report:", error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Ocurrió un error al crear el reporte base.',
+                });
+                setInsideButtonsDisabled(false);
+            }
+        });
     };
     const renderStepIndicator = () => {
         const steps = [
@@ -189,7 +225,7 @@ export const BaseReportCreationView = () => {
                 ) : (
                     <button
                         className="btn btn-success px-4 py-2 d-flex align-items-center fw-medium shadow-sm"
-                        onClick={() => { /* Lógica para crear el reporte */ }}
+                        onClick={handleCreate}
                         disabled={insideButtonsDisabled}
                     >
                         Crear <i className="bi bi-check2 ms-2"></i>

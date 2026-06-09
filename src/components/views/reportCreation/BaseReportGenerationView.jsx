@@ -40,6 +40,11 @@ export const BaseReportGenerationView = ({ sideMenuDisabled, setSideMenuDisabled
         setSideMenuDisabled(true);
     };
 
+    const handleCloseCreationForm = () => {
+        setIsCreating(false);
+        setSideMenuDisabled(false);
+    }
+
     const handleCloseCreateReport = () => {
         Swal.fire({
             icon: 'warning',
@@ -67,7 +72,7 @@ export const BaseReportGenerationView = ({ sideMenuDisabled, setSideMenuDisabled
                 width={1400}
                 height={"94vh"}
                 children={
-                    <BaseReportCreationView sideMenuDisabled={sideMenuDisabled} setSideMenuDisabled={setSideMenuDisabled} />
+                    <BaseReportCreationView onClose={handleCloseCreationForm} />
                 }
             />
             <div className="d-flex flex-column gap-2">

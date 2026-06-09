@@ -4,9 +4,10 @@ import { useTypeHazardQuery } from "../../../query/useTypeHazardQuery";
 import Swal from "sweetalert2";
 
 export const HazardCreationView = ({ onClose, getSwalTarget }) => {
-    const { create } = useHazardMutation();
+
+    const { create } = useHazardMutation();
     const { useGetAll } = useTypeHazardQuery();
-    
+
     const { data: typesHazard = [], isLoading: typesLoading } = useGetAll();
 
     const Toast = Swal.mixin({

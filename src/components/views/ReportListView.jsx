@@ -26,6 +26,32 @@ export const ReportListView = () => {
         );
     }
 
+    const STAGE_ORDER = ["INITIAL_REPORT", "EVALUATING_AREAS", "HAZARD_PONDERATION_SUMMARY_GENERATED"];
+    
+    const stageMapping = {
+        INITIAL_REPORT: "Iniciando reporte",
+        EVALUATING_AREAS: "Evaluando áreas",
+        HAZARD_PONDERATION_SUMMARY_GENERATED: "Ponderación generada",
+    };
+
+    const groupedReports = reportList.reduce((acc, report) => {
+        const stage = report?.report?.stage || report?.stage || "UNKNOWN";
+        if (!acc[stage]) acc[stage] = [];
+        acc[stage].push(report);
+        return acc;
+    }, {});
+
+    const sortedStages = Object.keys(groupedReports).sort((a, b) => {
+        const indexA = STAGE_ORDER.indexOf(a);
+        const indexB = STAGE_ORDER.indexOf(b);
+        if (indexA !== -1 && indexB !== -1) return indexA - indexB;
+        if (indexA !== -1) return -1;
+        if (indexB !== -1) return 1;
+        return 0;
+    });
+
+    const allCompleted = sortedStages.length === 1 && sortedStages[0] === "HAZARD_PONDERATION_SUMMARY_GENERATED";
+
     return (
         <div className="d-flex flex-column gap-4 p-3 w-100">
             <div className="d-flex flex-column gap-2">
@@ -44,7 +70,7 @@ export const ReportListView = () => {
                 <div className="alert alert-info shadow-sm border-0 bg-white" style={{ borderLeft: '4px solid #0dcaf0' }}>
                     No hay reportes disponibles en este momento.
                 </div>
-            ) : (
+            ) : allCompleted ? (
                 <div
                     style={{
                         display: 'grid',
@@ -53,13 +79,33 @@ export const ReportListView = () => {
                         alignItems: 'stretch'
                     }}
                 >
-                    {reportList.map((item, index) => {
-                        return (
-                            <ReportCard key={index} report={item} />
-                        );
-                    })}
+                    {reportList.map((item, index) => (
+                        <ReportCard key={index} report={item} />
+                    ))}
                 </div>
-
+            ) : (
+                <div className="d-flex flex-column gap-4">
+                    {sortedStages.map(stage => (
+                        <div key={stage} className="d-flex flex-column gap-3">
+                            <h5 className="m-0 fw-bold text-secondary border-bottom pb-2">
+                                <i className="bi bi-tag-fill me-2" style={{ fontSize: '0.9rem' }}></i>
+                                {stageMapping[stage] || stage}
+                            </h5>
+                            <div
+                                style={{
+                                    display: 'grid',
+                                    gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+                                    gap: '1.5rem',
+                                    alignItems: 'stretch'
+                                }}
+                            >
+                                {groupedReports[stage].map((item, index) => (
+                                    <ReportCard key={`${stage}-${index}`} report={item} />
+                                ))}
+                            </div>
+                        </div>
+                    ))}
+                </div>
             )}
         </div>
     );

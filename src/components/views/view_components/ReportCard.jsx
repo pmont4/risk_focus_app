@@ -120,17 +120,15 @@ export const ReportCard = ({ report }) => {
                 {/* Footer */}
                 <div className="mt-auto">
                     <button
-                        className={`btn w-100 fw-semibold shadow-sm position-relative overflow-hidden d-flex justify-content-center align-items-center ${isCompleted ? 'btn-primary' : 'btn-secondary'}`}
+                        className="btn w-100 fw-semibold shadow-sm position-relative overflow-hidden d-flex justify-content-center align-items-center btn-primary"
                         style={{
                             padding: '0.6rem 1rem',
                             borderRadius: '8px',
                             letterSpacing: '0.3px',
                             border: 'none',
-                            opacity: isCompleted ? 1 : 0.65,
-                            cursor: isCompleted ? 'pointer' : 'not-allowed'
+                            cursor: 'pointer'
                         }}
-                        disabled={!isCompleted}
-                        onMouseEnter={() => isCompleted && setIsHovered(true)}
+                        onMouseEnter={() => setIsHovered(true)}
                         onMouseLeave={() => setIsHovered(false)}
                         onClick={() => {
                             console.log('hola');
@@ -139,17 +137,20 @@ export const ReportCard = ({ report }) => {
                         <div
                             style={{
                                 position: 'absolute',
-                                left: '-2px', // Asegura que cubra completamente el borde izquierdo sin huecos
+                                left: '-2px',
                                 top: 0,
                                 bottom: 0,
-                                width: isHovered ? 'calc(100% + 4px)' : '30px', // Franja animada
-                                background: isCompleted ? 'radial-gradient(circle at 150% 50%, transparent 28px, #f28120 31px)' : 'radial-gradient(circle at 150% 50%, transparent 28px, #6c757d 31px)',
+                                width: isHovered ? 'calc(100% + 4px)' : '30px',
+                                background: 'radial-gradient(circle at 150% 50%, transparent 28px, #f28120 31px)',
                                 transition: 'width 0.35s cubic-bezier(0.4, 0, 0.2, 1)',
                                 zIndex: 0
                             }}
                         />
                         <span style={{ position: 'relative', zIndex: 1 }}>
-                            {isCompleted ? 'Ver reporte completo' : 'Reporte no disponible'}
+                            {stage === "INITIAL_REPORT" ? 'Administrar Areas' :
+                             stage === "EVALUATING_AREAS" ? 'Generar Ponderacion' :
+                             stage === "HAZARD_PONDERATION_SUMMARY_GENERATED" ? 'Ver reporte completo' : 
+                             'Ver reporte completo'}
                         </span>
                     </button>
                 </div>
