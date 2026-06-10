@@ -1,13 +1,17 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import logo from '../img/gpi_risk_focus_logo.png';
 
-export const SideMenuNav = ({ setView, sideMenuDisabled }) => {
+export const SideMenuNav = ({ view, setView, sideMenuDisabled }) => {
 
     const [expandedMenus, setExpandedMenus] = useState({
-        generate: true,
+        view_base_report_generation: true,
     });
 
-    const [activeView, setActiveView] = useState('view_reports');
+    useEffect(() => {
+        if (view === 'view_areas' || view === 'view_ponderation') {
+            setExpandedMenus(prev => ({ ...prev, view_base_report_generation: true }));
+        }
+    }, [view]);
 
     const toggleMenu = (menuId) => {
         setExpandedMenus(prev => ({ ...prev, [menuId]: !prev[menuId] }));
@@ -21,17 +25,17 @@ export const SideMenuNav = ({ setView, sideMenuDisabled }) => {
             action: () => setView('view_reports')
         },
         {
-            id: 'plants',
+            id: 'view_plants',
             label: 'Plantas',
             action: () => setView('view_plants'),
         },
         {
-            id: 'generate',
+            id: 'view_base_report_generation',
             label: 'Reportes',
             action: () => setView('view_base_report_generation'),
             subItems: [
-                { id: 'areas', label: 'Administrar áreas', action: () => setView('view_areas') },
-                { id: 'ponderation', label: 'Generar ponderación', action: () => setView('view_ponderation') }
+                { id: 'view_areas', label: 'Administrar áreas', action: () => setView('view_areas') },
+                { id: 'view_ponderation', label: 'Generar ponderación', action: () => setView('view_ponderation') }
             ]
         }
     ];
@@ -61,23 +65,21 @@ export const SideMenuNav = ({ setView, sideMenuDisabled }) => {
                             onClick={() => {
                                 if (item.action) item.action();
 
-                                if (item.id != "generate" && item.id != "plants") {
+                                if (item.id != "view_base_report_generation" && item.id != "view_plants") {
                                     toggleMenu(item.id)
                                 }
-
-                                setActiveView(item.id);
                             }}
                             style={{
-                                backgroundColor: activeView === item.id || (item.subItems && item.subItems.some(subItem => subItem.id === activeView)) ? '#b4cce4ff' : 'transparent',
-                                color: activeView === item.id || (item.subItems && item.subItems.some(subItem => subItem.id === activeView)) ? '#6b6b6bff' : '#333'
+                                backgroundColor: view === item.id || (item.subItems && item.subItems.some(subItem => subItem.id === view)) ? '#b4cce4ff' : 'transparent',
+                                color: view === item.id || (item.subItems && item.subItems.some(subItem => subItem.id === view)) ? '#6b6b6bff' : '#333'
                             }}
                             onMouseOver={(e) => {
-                                if (activeView !== item.id && !(item.subItems && item.subItems.some(subItem => subItem.id === activeView))) {
+                                if (view !== item.id && !(item.subItems && item.subItems.some(subItem => subItem.id === view))) {
                                     e.target.style.backgroundColor = '#dadadaff';
                                 }
                             }}
                             onMouseOut={(e) => {
-                                if (activeView !== item.id && !(item.subItems && item.subItems.some(subItem => subItem.id === activeView))) {
+                                if (view !== item.id && !(item.subItems && item.subItems.some(subItem => subItem.id === view))) {
                                     e.target.style.backgroundColor = 'transparent';
                                 }
                             }}
@@ -95,20 +97,18 @@ export const SideMenuNav = ({ setView, sideMenuDisabled }) => {
                                         className="btn btn-sm text-start border-0"
                                         onClick={() => {
                                             subItem.action();
-
-                                            setActiveView(subItem.id);
                                         }}
                                         style={{
                                             color: '#555',
-                                            backgroundColor: activeView === subItem.id ? '#f4f7caff' : 'transparent',
+                                            backgroundColor: view === subItem.id ? '#f4f7caff' : 'transparent',
                                         }}
                                         onMouseOver={(e) => {
-                                            if (activeView !== subItem.id) {
+                                            if (view !== subItem.id) {
                                                 e.target.style.backgroundColor = '#dadadaff';
                                             }
                                         }}
                                         onMouseOut={(e) => {
-                                            if (activeView !== subItem.id) {
+                                            if (view !== subItem.id) {
                                                 e.target.style.backgroundColor = 'transparent';
                                             }
                                         }}

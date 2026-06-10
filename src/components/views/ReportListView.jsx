@@ -1,7 +1,7 @@
 import { useReportQuery } from "../../query/useReportQuery";
 import { ReportCard } from "./view_components/ReportCard";
 
-export const ReportListView = () => {
+export const ReportListView = ({ setView }) => {
 
     const { useGetAll } = useReportQuery();
 
@@ -27,7 +27,7 @@ export const ReportListView = () => {
     }
 
     const STAGE_ORDER = ["INITIAL_REPORT", "EVALUATING_AREAS", "HAZARD_PONDERATION_SUMMARY_GENERATED"];
-    
+
     const stageMapping = {
         INITIAL_REPORT: "Iniciando reporte",
         EVALUATING_AREAS: "Evaluando áreas",
@@ -80,7 +80,7 @@ export const ReportListView = () => {
                     }}
                 >
                     {reportList.map((item, index) => (
-                        <ReportCard key={index} report={item} />
+                        <ReportCard key={index} report={item} setView={setView} />
                     ))}
                 </div>
             ) : (
@@ -100,7 +100,7 @@ export const ReportListView = () => {
                                 }}
                             >
                                 {groupedReports[stage].map((item, index) => (
-                                    <ReportCard key={`${stage}-${index}`} report={item} />
+                                    <ReportCard key={`${stage}-${index}`} report={item} setView={setView} />
                                 ))}
                             </div>
                         </div>

@@ -4,6 +4,7 @@ import { ReportListView } from "./views/ReportListView";
 import { AnimatedWindow } from "./animation/AnimatedWindow";
 import { PlantListView } from "./views/PlantListView";
 import { BaseReportGenerationView } from "./views/reportCreation/BaseReportGenerationView";
+import { AreaManagerView } from "./views/AreaManagerView";
 
 export const MainModal = () => {
 
@@ -30,7 +31,7 @@ export const MainModal = () => {
                     overflow: 'hidden',
                     backgroundColor: '#f3f3f3ff'
                 }}>
-                    <SideMenuNav setView={setView} sideMenuDisabled={sideMenuDisabled} />
+                    <SideMenuNav view={view} setView={setView} sideMenuDisabled={sideMenuDisabled} />
                     {/* MAIN CONTENT */}
                     <div style={{
                         flex: 1,
@@ -41,7 +42,7 @@ export const MainModal = () => {
                         <AnimatedWindow
                             condition={view === 'view_reports'}
                             children={
-                                <ReportListView />
+                                <ReportListView setView={setView} />
                             }
                         />
                         <AnimatedWindow
@@ -65,9 +66,7 @@ export const MainModal = () => {
                         <AnimatedWindow
                             condition={view === 'view_areas'}
                             children={
-                                <>
-                                    areas
-                                </>
+                                <AreaManagerView setView={setView} />
                             }
                         />
                         <AnimatedWindow

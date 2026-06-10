@@ -93,6 +93,9 @@ export const BaseReportGenerationView = ({ sideMenuDisabled, setSideMenuDisabled
                         width: '100%',
                     }}
                 />
+                <p className="text-secondary mb-0">
+                    Cree un nuevo reporte o seleccione uno existente para definir su estructura fundamental (amenazas y criterios de evaluación).
+                </p>
             </div>
 
             {reportList.length === 0 ? (

@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export const ReportCard = ({ report }) => {
+export const ReportCard = ({ report, setView }) => {
 
     const [isHovered, setIsHovered] = useState(false);
     const threats = report?.topFiveHazards || [];
@@ -36,7 +36,7 @@ export const ReportCard = ({ report }) => {
                 {/* Header */}
                 <div className="mb-4 border-bottom pb-3 d-flex align-items-center justify-content-between gap-3">
                     <div className="d-flex align-items-center gap-3" style={{ minWidth: 0, flex: 1 }}>
-                        <div 
+                        <div
                             className="rounded-3 d-flex align-items-center justify-content-center bg-light"
                             style={{
                                 width: '42px',
@@ -131,7 +131,13 @@ export const ReportCard = ({ report }) => {
                         onMouseEnter={() => setIsHovered(true)}
                         onMouseLeave={() => setIsHovered(false)}
                         onClick={() => {
-                            console.log('hola');
+                            if (stage === "INITIAL_REPORT") {
+                                setView('view_areas');
+                            } else if (stage === "EVALUATING_AREAS") {
+                                setView('view_ponderation');
+                            } else {
+                                console.log('Ver reporte completo', report);
+                            }
                         }}
                     >
                         <div
@@ -148,9 +154,9 @@ export const ReportCard = ({ report }) => {
                         />
                         <span style={{ position: 'relative', zIndex: 1 }}>
                             {stage === "INITIAL_REPORT" ? 'Administrar Areas' :
-                             stage === "EVALUATING_AREAS" ? 'Generar Ponderacion' :
-                             stage === "HAZARD_PONDERATION_SUMMARY_GENERATED" ? 'Ver reporte completo' : 
-                             'Ver reporte completo'}
+                                stage === "EVALUATING_AREAS" ? 'Generar Ponderacion' :
+                                    stage === "HAZARD_PONDERATION_SUMMARY_GENERATED" ? 'Ver reporte completo' :
+                                        'Ver reporte completo'}
                         </span>
                     </button>
                 </div>
