@@ -2,7 +2,7 @@ import { useReportQuery } from "../../query/useReportQuery";
 import { useTypeHazardQuery } from "../../query/useTypeHazardQuery";
 import { AreaCard } from "./view_components/AreaCard";
 
-export const AreaManagerView = ({ setView }) => {
+export const AreaManagerView = ({ sideMenuDisabled, setSideMenuDisabled, setView }) => {
 
     const { useGetAll } = useReportQuery();
     const { data: reportList = [], isLoading: isLoadingReports } = useGetAll();
@@ -91,7 +91,7 @@ export const AreaManagerView = ({ setView }) => {
                     }}
                 >
                     {mappedReports.map((report, index) => (
-                        <AreaCard key={index} data={report} setView={setView} />
+                        <AreaCard key={index} data={report} setView={setView} sideMenuDisabled={sideMenuDisabled} setSideMenuDisabled={setSideMenuDisabled} />
                     ))}
                 </div>
             )}

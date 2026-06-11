@@ -21,7 +21,7 @@ export const SideMenuNav = ({ view, setView, sideMenuDisabled }) => {
     const menuItems = [
         {
             id: 'view_reports',
-            label: 'Reportes existentes',
+            label: 'Bandeja de Reportes',
             action: () => setView('view_reports')
         },
         {
@@ -31,7 +31,7 @@ export const SideMenuNav = ({ view, setView, sideMenuDisabled }) => {
         },
         {
             id: 'view_base_report_generation',
-            label: 'Reportes',
+            label: 'Definición de Reportes',
             action: () => setView('view_base_report_generation'),
             subItems: [
                 { id: 'view_areas', label: 'Administrar áreas', action: () => setView('view_areas') },

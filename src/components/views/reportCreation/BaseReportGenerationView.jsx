@@ -77,7 +77,7 @@ export const BaseReportGenerationView = ({ sideMenuDisabled, setSideMenuDisabled
             />
             <div className="d-flex flex-column gap-2">
                 <div className="d-flex justify-content-between align-items-center w-100 mb-1">
-                    <h2 className="m-0 fw-bold" style={{ color: '#2c3e50' }}>Reportes</h2>
+                    <h2 className="m-0 fw-bold" style={{ color: '#2c3e50' }}>Definición de Reportes</h2>
                     <AddButton
                         idleElement={<i className="bi bi-plus-lg" style={{ fontSize: '1.2rem', minWidth: '40px', textAlign: 'center' }}></i>}
                         hoveringElement="Crear reporte"

@@ -55,7 +55,7 @@ export const ReportListView = ({ setView }) => {
     return (
         <div className="d-flex flex-column gap-4 p-3 w-100">
             <div className="d-flex flex-column gap-2">
-                <h2 className="m-0 fw-bold" style={{ color: '#2c3e50' }}>Lista de Reportes</h2>
+                <h2 className="m-0 fw-bold" style={{ color: '#2c3e50' }}>Bandeja de Reportes</h2>
                 <div
                     style={{
                         height: '4px',

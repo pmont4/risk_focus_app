@@ -66,7 +66,7 @@ export const MainModal = () => {
                         <AnimatedWindow
                             condition={view === 'view_areas'}
                             children={
-                                <AreaManagerView setView={setView} />
+                                <AreaManagerView sideMenuDisabled={sideMenuDisabled} setSideMenuDisabled={setSideMenuDisabled} setView={setView} />
                             }
                         />
                         <AnimatedWindow

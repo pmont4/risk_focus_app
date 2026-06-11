@@ -1,25 +1,45 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
+import { DraggableWindow } from "../draggableWindow/DraggableWindow";
+import { AreaList } from "../AreaList";
+import Swal from "sweetalert2";
 
-export const AreaCard = ({ data, setView }) => {
+export const AreaCard = ({ data, setView, sideMenuDisabled, setSideMenuDisabled }) => {
+
     const [isHovered, setIsHovered] = useState(false);
-    
-    // Datos falsos por si no se proveen
-    const item = data || {
-        plantName: "Planta Reporte #1",
-        date: "2026-06-10",
-        categories: [
-            { type: "Físicas", threats: ["Ruido", "Temperatura"] },
-            { type: "Químicas", threats: ["Vapores"] }
-        ]
-    };
+    const [isAreaListOpen, setIsAreaListOpen] = useState(false);
 
-    const allThreats = item.categories.flatMap(cat => 
+    const winRef = useRef(null);
+
+    const item = data;
+
+    const allThreats = item.categories.flatMap(cat =>
         (cat.threats || []).map(threat => ({ name: threat, category: cat.type }))
     );
 
     const MAX_CHIPS = 10;
     const displayedThreats = allThreats.slice(0, MAX_CHIPS);
     const extraThreatsCount = allThreats.length - MAX_CHIPS;
+
+    const handleOpen = () => {
+        setIsAreaListOpen(true);
+        setSideMenuDisabled(true);
+    };
+
+    const handleClose = () => {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Cancelacion de administración de áreas',
+            text: '¿Estas seguro de salir? la información de áreas no sera guardada.',
+            showCancelButton: true,
+            confirmButtonText: 'Si, salir',
+            cancelButtonText: 'No, cancelar',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                setIsAreaListOpen(false);
+                setSideMenuDisabled(false);
+            }
+        });
+    };
 
     return (
         <div
@@ -38,6 +58,17 @@ export const AreaCard = ({ data, setView }) => {
                 e.currentTarget.style.boxShadow = '0 .125rem .25rem rgba(0,0,0,.075)';
             }}
         >
+            <DraggableWindow
+                ref={winRef}
+                isOpen={isAreaListOpen}
+                onClose={handleClose}
+                title={`Áreas - ${item.plantName}`}
+                width={800}
+                height={"auto"}
+                children={
+                    <AreaList report={item.rawReport?.report || item.rawReport} setView={setView} />
+                }
+            />
             <div className="card-body d-flex flex-column p-4" style={{ minHeight: 0 }}>
                 {/* Header */}
                 <div className="mb-4 border-bottom pb-3 d-flex align-items-center justify-content-between gap-3" style={{ flexShrink: 0 }}>
@@ -77,7 +108,7 @@ export const AreaCard = ({ data, setView }) => {
                             Total: {allThreats.length}
                         </span>
                     </div>
-                    
+
                     {allThreats.length === 0 ? (
                         <div className="d-flex flex-column align-items-center justify-content-center h-100 text-muted opacity-75">
                             <i className="bi bi-shield-check" style={{ fontSize: '2rem' }}></i>
@@ -86,7 +117,7 @@ export const AreaCard = ({ data, setView }) => {
                     ) : (
                         <div className="d-flex flex-wrap align-content-start gap-2" style={{ overflowY: 'auto', flexGrow: 1, paddingRight: '4px' }}>
                             {displayedThreats.map((threat, idx) => (
-                                <div 
+                                <div
                                     key={idx}
                                     className="badge d-flex align-items-center px-3 py-2 fw-medium"
                                     style={{
@@ -106,7 +137,7 @@ export const AreaCard = ({ data, setView }) => {
                                 </div>
                             ))}
                             {extraThreatsCount > 0 && (
-                                <div 
+                                <div
                                     className="badge d-flex align-items-center px-3 py-2 fw-bold"
                                     style={{
                                         backgroundColor: '#e0e7ff',
@@ -138,10 +169,8 @@ export const AreaCard = ({ data, setView }) => {
                         }}
                         onMouseEnter={() => setIsHovered(true)}
                         onMouseLeave={() => setIsHovered(false)}
-                        onClick={() => {
-                            setView('view_areas');
-                            console.log("Administrar áreas del reporte:", item.plantName);
-                        }}
+                        disabled={sideMenuDisabled}
+                        onClick={handleOpen}
                     >
                         <div
                             style={{
