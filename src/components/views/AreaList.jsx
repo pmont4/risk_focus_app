@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react';
+import { useReportMutation } from '../../query/mutation/useReportMutation';
+import Swal from 'sweetalert2';
 
-export const AreaList = ({ report }) => {
+export const AreaList = ({ report, onClose }) => {
 
+    const { updateAreaAndSubarea } = useReportMutation();
     const [areas, setAreas] = useState([]);
 
     useEffect(() => {
@@ -90,7 +93,29 @@ export const AreaList = ({ report }) => {
             areas: cleanedAreas
         };
 
-        console.log('Reporte actualizado listo para mutation:', updatedReport);
+        updateAreaAndSubarea(false, updatedReport, {
+            onSuccess: () => {
+                Swal.fire({
+                    title: 'Reporte actualizado',
+                    text: 'Las áreas y subáreas han sido actualizadas correctamente.',
+                    icon: 'success',
+                    confirmButtonColor: '#0d6efd',
+                    timer: 2000,
+                }).then(() => {
+                    if (onClose) onClose(true);
+                });
+            },
+            onError: (error) => {
+                console.error("Error al actualizar áreas:", error);
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Hubo un problema al actualizar las áreas',
+                    icon: 'error',
+                    confirmButtonColor: '#0d6efd',
+                    timer: 5000,
+                });
+            }
+        });
     };
 
     return (

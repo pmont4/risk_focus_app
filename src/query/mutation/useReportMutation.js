@@ -70,11 +70,26 @@ export const useReportMutation = () => {
         },
     });
 
+    const updateAreaAndSubareaMutation = useMutation({
+        mutationKey: ['report', 'updateareasponderation'],
+        mutationFn: ({ ponderation, payload }) => reportyAPI_GetAll.put(`/updateareasponderation/${ponderation}`, payload).then(res => res.data),
+
+        onSuccess(data) {
+            patchAllLists((curr) => curr?.map(it => it.idReport === data.idReport ? data : it));
+            qc.invalidateQueries({ queryKey: reportKeys.reports() });
+        },
+
+        async onSettled() {
+            await qc.invalidateQueries({ queryKey: baseKey, refetchType: 'active' });
+        },
+    });
+
     const createBaseReport = (payload, opts) => createBaseReportMutation.mutate(payload, opts);
     const updateHazards = (payload, opts) => updateHazardsMutation.mutate(payload, opts);
     const updateCriteria = (payload, opts) => updateCriteriaMutation.mutate(payload, opts);
     const updateProbability = (payload, opts) => updateProbabilityCriteriaMutation.mutate(payload, opts);
+    const updateAreaAndSubarea = (ponderation, payload, opts) => updateAreaAndSubareaMutation.mutate({ ponderation, payload }, opts);
 
-    return { createBaseReport, updateHazards, updateCriteria, updateProbability }
+    return { createBaseReport, updateHazards, updateCriteria, updateProbability, updateAreaAndSubarea }
 
 }

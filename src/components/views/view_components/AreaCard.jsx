@@ -25,20 +25,25 @@ export const AreaCard = ({ data, setView, sideMenuDisabled, setSideMenuDisabled 
         setSideMenuDisabled(true);
     };
 
-    const handleClose = () => {
-        Swal.fire({
-            icon: 'warning',
-            title: 'Cancelacion de administración de áreas',
-            text: '¿Estas seguro de salir? la información de áreas no sera guardada.',
-            showCancelButton: true,
-            confirmButtonText: 'Si, salir',
-            cancelButtonText: 'No, cancelar',
-        }).then((result) => {
-            if (result.isConfirmed) {
-                setIsAreaListOpen(false);
-                setSideMenuDisabled(false);
-            }
-        });
+    const handleClose = (valid = false) => {
+        if (!valid) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Cancelacion de administración de áreas',
+                text: '¿Estas seguro de salir? la información de áreas no sera guardada.',
+                showCancelButton: true,
+                confirmButtonText: 'Si, salir',
+                cancelButtonText: 'No, cancelar',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    setIsAreaListOpen(false);
+                    setSideMenuDisabled(false);
+                }
+            });
+        } else {
+            setIsAreaListOpen(false);
+            setSideMenuDisabled(false);
+        }
     };
 
     return (
