@@ -7,6 +7,8 @@ export const AreaList = ({ report, onClose }) => {
     const { updateAreaAndSubarea } = useReportMutation();
     const [areas, setAreas] = useState([]);
 
+    const generateTempId = () => `temp-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
+
     useEffect(() => {
         if (report && report.areas && Array.isArray(report.areas)) {
             const initialAreas = report.areas.map((area) => ({
@@ -17,9 +19,9 @@ export const AreaList = ({ report, onClose }) => {
                     nameSubArea: sub.nameSubArea || '',
                 }))
             }));
-            setAreas(initialAreas.length > 0 ? initialAreas : [{ idArea: `0`, areaName: '', subAreas: [] }]);
+            setAreas(initialAreas.length > 0 ? initialAreas : [{ idArea: generateTempId(), areaName: '', subAreas: [] }]);
         } else {
-            setAreas([{ idArea: `0`, areaName: '', subAreas: [] }]);
+            setAreas([{ idArea: generateTempId(), areaName: '', subAreas: [] }]);
         }
     }, [report]);
 
@@ -28,7 +30,7 @@ export const AreaList = ({ report, onClose }) => {
     }, [areas]);
 
     const handleAddArea = () => {
-        setAreas([...areas, { idArea: `0`, areaName: '', subAreas: [] }]);
+        setAreas([...areas, { idArea: generateTempId(), areaName: '', subAreas: [] }]);
     };
 
     const handleDeleteArea = (idArea) => {
@@ -59,7 +61,7 @@ export const AreaList = ({ report, onClose }) => {
             if (area.idArea === idArea) {
                 return {
                     ...area,
-                    subAreas: [...area.subAreas, { idSubArea: `0`, nameSubArea: '' }]
+                    subAreas: [...area.subAreas, { idSubArea: generateTempId(), nameSubArea: '' }]
                 };
             }
             return area;
@@ -121,9 +123,18 @@ export const AreaList = ({ report, onClose }) => {
             return;
         }
 
+        const areasToSave = areas.map(area => ({
+            ...area,
+            idArea: area.idArea.toString().startsWith('temp-') ? '0' : area.idArea,
+            subAreas: area.subAreas.map(sub => ({
+                ...sub,
+                idSubArea: sub.idSubArea.toString().startsWith('temp-') ? '0' : sub.idSubArea
+            }))
+        }));
+
         const updatedReport = {
             ...report,
-            areas: areas
+            areas: areasToSave
         };
 
         updateAreaAndSubarea(false, updatedReport, {
