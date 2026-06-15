@@ -154,7 +154,7 @@ export const ReportCard = ({ report, setView }) => {
                         />
                         <span style={{ position: 'relative', zIndex: 1 }}>
                             {stage === "INITIAL_REPORT" ? 'Administrar Areas' :
-                                stage === "EVALUATING_AREAS" ? 'Generar Ponderacion' :
+                                stage === "EVALUATING_AREAS" ? (threats.length > 0 ? 'Actualizar Ponderacion' : 'Generar Ponderacion') :
                                     stage === "HAZARD_PONDERATION_SUMMARY_GENERATED" ? 'Ver reporte completo' :
                                         'Ver reporte completo'}
                         </span>

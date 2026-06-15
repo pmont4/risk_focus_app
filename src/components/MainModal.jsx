@@ -5,6 +5,7 @@ import { AnimatedWindow } from "./animation/AnimatedWindow";
 import { PlantListView } from "./views/PlantListView";
 import { BaseReportGenerationView } from "./views/reportCreation/BaseReportGenerationView";
 import { AreaManagerView } from "./views/AreaManagerView";
+import { PonderationListView } from "./views/PonderationListView";
 
 export const MainModal = () => {
 
@@ -72,9 +73,7 @@ export const MainModal = () => {
                         <AnimatedWindow
                             condition={view === 'view_ponderation'}
                             children={
-                                <>
-                                    ponderacion
-                                </>
+                                <PonderationListView sideMenuDisabled={sideMenuDisabled} setSideMenuDisabled={setSideMenuDisabled} setView={setView} />
                             }
                         />
                     </div>
