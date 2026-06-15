@@ -66,12 +66,12 @@ export const AreaCard = ({ data, setView, sideMenuDisabled, setSideMenuDisabled 
             <DraggableWindow
                 ref={winRef}
                 isOpen={isAreaListOpen}
-                onClose={handleClose}
+                onClose={() => handleClose(false)}
                 title={`Áreas - ${item.plantName}`}
                 width={800}
                 height={"auto"}
                 children={
-                    <AreaList report={item.rawReport?.report || item.rawReport} setView={setView} />
+                    <AreaList report={item.rawReport?.report || item.rawReport} setView={setView} onClose={() => handleClose(true)} />
                 }
             />
             <div className="card-body d-flex flex-column p-4" style={{ minHeight: 0 }}>

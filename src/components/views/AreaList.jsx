@@ -32,7 +32,20 @@ export const AreaList = ({ report, onClose }) => {
     };
 
     const handleDeleteArea = (idArea) => {
-        setAreas(areas.filter(area => area.idArea !== idArea));
+        Swal.fire({
+            title: '¿Eliminar área?',
+            text: 'Esta acción puede modificar la estructura y la ponderación del reporte. ¿Desea continuar?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                setAreas(areas.filter(area => area.idArea !== idArea));
+            }
+        });
     };
 
     const handleAreaNameChange = (idArea, newName) => {
@@ -54,15 +67,28 @@ export const AreaList = ({ report, onClose }) => {
     };
 
     const handleDeleteSubarea = (idArea, idSubArea) => {
-        setAreas(areas.map(area => {
-            if (area.idArea === idArea) {
-                return {
-                    ...area,
-                    subAreas: area.subAreas.filter(sub => sub.idSubArea !== idSubArea)
-                };
+        Swal.fire({
+            title: '¿Eliminar subárea?',
+            text: 'Esta acción puede modificar la estructura y la ponderación del reporte. ¿Desea continuar?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                setAreas(areas.map(area => {
+                    if (area.idArea === idArea) {
+                        return {
+                            ...area,
+                            subAreas: area.subAreas.filter(sub => sub.idSubArea !== idSubArea)
+                        };
+                    }
+                    return area;
+                }));
             }
-            return area;
-        }));
+        });
     };
 
     const handleSubareaNameChange = (idArea, idSubArea, newName) => {
@@ -80,17 +106,24 @@ export const AreaList = ({ report, onClose }) => {
     };
 
     const handleApply = () => {
-        const cleanedAreas = areas
-            .filter(area => area.areaName && area.areaName.trim() !== '')
-            .map(area => ({
-                ...area,
-                subAreas: (area.subAreas || []).filter(sub => sub.nameSubArea && sub.nameSubArea.trim() !== '')
-            }))
-            .filter(area => area.subAreas.length > 0);
+        const hasEmptyName = areas.some(area => 
+            !area.areaName || area.areaName.trim() === '' || 
+            (area.subAreas && area.subAreas.some(sub => !sub.nameSubArea || sub.nameSubArea.trim() === ''))
+        );
+
+        if (hasEmptyName) {
+            Swal.fire({
+                title: 'Nombres incompletos',
+                text: 'Hay áreas o subáreas con el nombre vacío. Por favor, asegúrese de asignar un nombre a todas antes de aplicar los cambios.',
+                icon: 'warning',
+                confirmButtonColor: '#0d6efd',
+            });
+            return;
+        }
 
         const updatedReport = {
             ...report,
-            areas: cleanedAreas
+            areas: areas
         };
 
         updateAreaAndSubarea(false, updatedReport, {
