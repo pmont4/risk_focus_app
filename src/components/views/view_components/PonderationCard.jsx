@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export const PonderationCard = ({ data, setView, sideMenuDisabled }) => {
+export const PonderationCard = ({ data, setView, sideMenuDisabled, onPonderateClick }) => {
 
     const [isHovered, setIsHovered] = useState(false);
 
@@ -21,8 +21,11 @@ export const PonderationCard = ({ data, setView, sideMenuDisabled }) => {
     const totalSubareas = areas.reduce((acc, area) => acc + (area.subAreas?.length || 0), 0);
 
     const handlePonderate = () => {
-        // Por el momento solo notificamos, luego se implementará la vista o modal de ponderación
-        console.log("Ponderar reporte", data);
+        if (onPonderateClick) {
+            onPonderateClick(item.rawReport);
+        } else {
+            console.log("Ponderar reporte", data);
+        }
     };
 
     return (

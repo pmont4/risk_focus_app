@@ -1,9 +1,15 @@
 import { useReportQuery } from "../../query/useReportQuery";
 import { useTypeHazardQuery } from "../../query/useTypeHazardQuery";
 import { PonderationCard } from "./view_components/PonderationCard";
+import { useRef, useState } from "react";
+import { DraggableWindow } from "./draggableWindow/DraggableWindow";
+import { PonderationReportView } from "./PonderationReportView";
 
 export const PonderationListView = ({ sideMenuDisabled, setSideMenuDisabled, setView }) => {
 
+    const winRef = useRef(null);
+    const [isWindowOpen, setIsWindowOpen] = useState(false);
+    const [selectedReport, setSelectedReport] = useState(null);
     const { useGetAll } = useReportQuery();
     const { data: reportList = [], isLoading: isLoadingReports } = useGetAll();
 
@@ -66,8 +72,32 @@ export const PonderationListView = ({ sideMenuDisabled, setSideMenuDisabled, set
         };
     });
 
+    const handleOpenPonderation = (reportData) => {
+        const reportContent = reportData?.report || reportData;
+        setSelectedReport(reportContent);
+        setIsWindowOpen(true);
+        setSideMenuDisabled(true);
+    };
+
+    const closePonderation = () => {
+        setIsWindowOpen(false);
+        setSideMenuDisabled(false);
+        setTimeout(() => setSelectedReport(null), 300); // Delay clearing to allow animation
+    };
+
     return (
         <div className="d-flex flex-column gap-4 p-3 w-100">
+            <DraggableWindow
+                ref={winRef}
+                isOpen={isWindowOpen}
+                onClose={closePonderation}
+                title="Matriz de Ponderación"
+                width={"95vw"}
+                height={"auto"}
+                children={
+                    selectedReport ? <PonderationReportView reportData={selectedReport} onClose={closePonderation} getSwalTarget={() => winRef.current?.getSwalTarget()} /> : null
+                }
+            />
             <div className="d-flex flex-column gap-2">
                 <h2 className="m-0 fw-bold" style={{ color: '#2c3e50' }}>Ponderación de Reportes</h2>
                 <div
@@ -95,7 +125,7 @@ export const PonderationListView = ({ sideMenuDisabled, setSideMenuDisabled, set
                     }}
                 >
                     {mappedReports.map((report, index) => (
-                        <PonderationCard key={index} data={report} setView={setView} sideMenuDisabled={sideMenuDisabled} />
+                        <PonderationCard key={index} data={report} setView={setView} sideMenuDisabled={sideMenuDisabled} onPonderateClick={handleOpenPonderation} />
                     ))}
                 </div>
             )}
