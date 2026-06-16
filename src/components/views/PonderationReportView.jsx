@@ -31,11 +31,6 @@ export const PonderationReportView = ({ reportData, onClose, getSwalTarget }) =>
     setAreas(processAreas(reportData.areas));
   }, [reportData]);
 
-  // Debug useEffect para ver la estructura cuando cambian las áreas
-  useEffect(() => {
-    console.log("Debug [Areas Modificadas]:", areas);
-  }, [areas]);
-
   const handleCellClick = (areaIndex, subAreaIndex, hazardId, type, value) => {
     setAreas(prevAreas => {
       const newAreas = [...prevAreas];
