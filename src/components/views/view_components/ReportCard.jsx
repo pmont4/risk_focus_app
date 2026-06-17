@@ -71,18 +71,35 @@ export const ReportCard = ({ report, setView }) => {
                     <div className="bg-light p-3 rounded mb-4 text-dark" style={{ fontSize: '0.85rem' }}>
                         <div className="mb-2">
                             <strong>Dirección:</strong> <br />
-                            <span className="text-secondary">{report?.report?.plant?.addressPlant || "Dirección no registrada"}</span>
+                            <div 
+                                className="text-secondary"
+                                title={report?.report?.plant?.addressPlant || "Dirección no registrada"}
+                                style={{ 
+                                    display: '-webkit-box', 
+                                    WebkitLineClamp: 2, 
+                                    WebkitBoxOrient: 'vertical', 
+                                    overflow: 'hidden',
+                                    minHeight: '2.55rem' 
+                                }}
+                            >
+                                {report?.report?.plant?.addressPlant || "Dirección no registrada"}
+                            </div>
                         </div>
                         <div>
                             <strong>Coordenadas:</strong> <br />
-                            <span className="text-secondary">Lat: {report?.report?.plant?.latitudePlant || "N/A"} | Lng: {report?.report?.plant?.longitudePlant || "N/A"}</span>
+                            <div 
+                                className="text-secondary text-truncate" 
+                                title={`Lat: ${report?.report?.plant?.latitudePlant || "N/A"} | Lng: ${report?.report?.plant?.longitudePlant || "N/A"}`}
+                            >
+                                Lat: {report?.report?.plant?.latitudePlant || "N/A"} | Lng: {report?.report?.plant?.longitudePlant || "N/A"}
+                            </div>
                         </div>
                     </div>
 
-                    <div className="mt-auto">
+                    <div>
                         <div className="d-flex justify-content-between align-items-end mb-2">
                             <h6 className="fw-bold mb-0 text-dark" style={{ fontSize: '0.9rem' }}>
-                                Top {threats.length > 0 ? threats.length : ''} Amenazas Potenciales:
+                                Top {threats.length > 0 ? threats.length : ''} Riesgos Potenciales:
                             </h6>
                             {threats.length > 0 && (
                                 <span className="text-muted text-uppercase" style={{ fontSize: '0.7rem', fontWeight: '700', letterSpacing: '0.5px' }}>
