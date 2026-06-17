@@ -8,24 +8,35 @@ export const PonderationReportView = ({ reportData, onClose, getSwalTarget }) =>
 
   const processAreas = (dataAreas) => {
     const processed = JSON.parse(JSON.stringify(dataAreas || []));
-    processed.forEach(area => {
-      if (area.subAreas) {
-        area.subAreas.forEach(subArea => {
-          if (subArea.ponderations) {
-            subArea.ponderations.forEach(pond => {
-              if (pond.impact === 0) pond.impact = 1;
-              if (pond.probability === 0) pond.probability = 1;
-              if (pond.ponderationScore === 0) pond.ponderationScore = pond.impact * pond.probability;
-            });
-          }
-        });
-      }
-    });
     return processed;
   };
 
   const [areas, setAreas] = useState(() => processAreas(reportData.areas));
-  const hazards = reportData.hazards || [];
+  
+  const CATEGORY_ORDER = [
+    "AMENAZAS NATURALES - GEOLÓGICAS E HIDROMETEOROLÓGICAS",
+    "AMENAZAS INDUSTRIALES",
+    "AMENAZAS OCUPACIONALES",
+    "AMENAZA TERRORISMO / FACTOR HUMANO",
+    "AMENAZAS AMBIENTE EXTERNO ORGANIZACIONAL"
+  ];
+
+  const hazards = [...(reportData.hazards || [])].sort((a, b) => {
+    const typeA = a.typeHazard?.nameTypeHazard || "";
+    const typeB = b.typeHazard?.nameTypeHazard || "";
+    const indexA = CATEGORY_ORDER.indexOf(typeA);
+    const indexB = CATEGORY_ORDER.indexOf(typeB);
+    
+    if (indexA !== -1 && indexB !== -1) {
+      if (indexA === indexB) {
+        return (a.nameHazard || "").localeCompare(b.nameHazard || "");
+      }
+      return indexA - indexB;
+    }
+    if (indexA !== -1) return -1;
+    if (indexB !== -1) return 1;
+    return typeA.localeCompare(typeB);
+  });
 
   useEffect(() => {
     setAreas(processAreas(reportData.areas));

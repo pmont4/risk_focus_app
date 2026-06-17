@@ -172,6 +172,8 @@
     background-color: #f0f9ff !important; /* Soft blue tint */
     color: #0369a1 !important;
     font-weight: 700 !important;
+    padding-left: 6px !important;
+    padding-right: 6px !important;
 }
 
 /* Row Headers (Area/Subarea) */
@@ -268,6 +270,8 @@
     color: #0369a1;
     font-weight: 600;
     font-size: 1.1rem; /* Increased from 0.95rem */
+    padding-left: 6px !important;
+    padding-right: 6px !important;
 }
 
 .total-max-score-cell {
@@ -275,6 +279,8 @@
     color: #0369a1;
     font-weight: 600;
     font-size: 1.1rem;
+    padding-left: 6px !important;
+    padding-right: 6px !important;
 }
 
 /* Footer Styling */
