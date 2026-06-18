@@ -22,8 +22,28 @@ export const useReportQuery = () => {
         });
     }
 
+    const useGetById = (idReport) => {
+        return useQuery({
+            queryKey: reportKeys.reportById(idReport),
+            placeholderData: keepPreviousData,
+            queryFn: async () => {
+                const res = await reportyAPI_GetAll.get(`/${idReport}`);
+
+                if (res.status !== 200) throw new Error(`HTTP ${res.status}`);
+
+                const data = res.data;
+                const arrayData = Array.isArray(data) ? data : [data];
+
+                return arrayData;
+            },
+            staleTime: 30_000,
+            refetchOnWindowFocus: true,
+        });
+    }
+
     return {
         useGetAll,
+        useGetById
     };
 
 }
