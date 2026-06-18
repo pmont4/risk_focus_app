@@ -6,6 +6,7 @@ import { jsPDF } from "jspdf";
 import { ThreatListPrintView } from "./components/ThreatListPrintView";
 import { ImpactCriteriaPrintView } from "./components/ImpactCriteriaPrintView";
 import { ProbabilityCriteriaPrintView } from "./components/ProbabilityCriteriaPrintView";
+import { WeightSummaryPrintView } from "./components/WeightSummaryPrintView";
 import watermarkLogo from "../../img/watermark_logo.png";
 
 export const CompleteReportPage = () => {
@@ -23,7 +24,7 @@ export const CompleteReportPage = () => {
     useEffect(() => {
         if (reportToShow) {
             const reportName = reportToShow?.plant?.namePlant;
-            document.title = `Reporte Completo - ${reportName}`;
+            document.title = `Reporte Completo - ${reportName} - ${reportToShow?.reportDate}`;
         }
         return () => {
             document.title = "Risk Focus App";
@@ -56,7 +57,7 @@ export const CompleteReportPage = () => {
                 pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight, undefined, 'FAST');
             }
 
-            pdf.save(`Reporte_${reportToShow?.plant?.namePlant || 'Completo'}.pdf`);
+            pdf.save(`Reporte_${reportToShow?.plant?.namePlant || 'Completo'}_${reportToShow?.reportDate}.pdf`);
         } catch (error) {
             console.error("Error al generar el PDF:", error);
         } finally {
@@ -210,6 +211,9 @@ export const CompleteReportPage = () => {
                         </span>
                     </footer>
                 </div>
+
+                {/* --- PÁGINAS DINÁMICAS: RESUMEN DE PONDERACIÓN --- */}
+                <WeightSummaryPrintView hazardTotalPonderations={reportToShow?.hazardTotalPonderations} />
 
             </div>
         </div>
