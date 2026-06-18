@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router";
 import { useReportQuery } from "../../query/useReportQuery";
 import html2canvas from "html2canvas";
@@ -19,6 +19,16 @@ export const CompleteReportPage = () => {
     const { data: report, isLoading } = useGetById(idReport);
 
     const reportToShow = report?.at(0);
+
+    useEffect(() => {
+        if (reportToShow) {
+            const reportName = reportToShow?.plant?.namePlant;
+            document.title = `Reporte Completo - ${reportName}`;
+        }
+        return () => {
+            document.title = "Risk Focus App";
+        };
+    }, [reportToShow]);
 
     const handleDownloadPDF = async () => {
         if (!printRef.current) return;
