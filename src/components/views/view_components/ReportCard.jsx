@@ -71,15 +71,15 @@ export const ReportCard = ({ report, setView }) => {
                     <div className="bg-light p-3 rounded mb-4 text-dark" style={{ fontSize: '0.85rem' }}>
                         <div className="mb-2">
                             <strong>Dirección:</strong> <br />
-                            <div 
+                            <div
                                 className="text-secondary"
                                 title={report?.report?.plant?.addressPlant || "Dirección no registrada"}
-                                style={{ 
-                                    display: '-webkit-box', 
-                                    WebkitLineClamp: 2, 
-                                    WebkitBoxOrient: 'vertical', 
+                                style={{
+                                    display: '-webkit-box',
+                                    WebkitLineClamp: 2,
+                                    WebkitBoxOrient: 'vertical',
                                     overflow: 'hidden',
-                                    minHeight: '2.55rem' 
+                                    minHeight: '2.55rem'
                                 }}
                             >
                                 {report?.report?.plant?.addressPlant || "Dirección no registrada"}
@@ -87,8 +87,8 @@ export const ReportCard = ({ report, setView }) => {
                         </div>
                         <div>
                             <strong>Coordenadas:</strong> <br />
-                            <div 
-                                className="text-secondary text-truncate" 
+                            <div
+                                className="text-secondary text-truncate"
                                 title={`Lat: ${report?.report?.plant?.latitudePlant || "N/A"} | Lng: ${report?.report?.plant?.longitudePlant || "N/A"}`}
                             >
                                 Lat: {report?.report?.plant?.latitudePlant || "N/A"} | Lng: {report?.report?.plant?.longitudePlant || "N/A"}
@@ -153,7 +153,10 @@ export const ReportCard = ({ report, setView }) => {
                             } else if (stage === "EVALUATING_AREAS") {
                                 setView('view_ponderation');
                             } else {
-                                console.log('Ver reporte completo', report);
+                                const id = report?.report?.idReport;
+                                if (!id) return;
+
+                                window.open(`/complete-report/${id}`, "_blank", "noopener,noreferrer")
                             }
                         }}
                     >

@@ -1,7 +1,8 @@
-import { Routes, Route, Navigate } from "react-router";
+import { Routes, Route, Navigate, Outlet } from "react-router";
 import { MainPage } from "../pages/MainPage";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Footer } from "../components/Footer";
+import { CompleteReportPage } from "../pages/completeReport/CompleteReportPage";
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -13,20 +14,31 @@ export const RiskFocusApp = () => {
 
     return (
         <QueryClientProvider client={queryClient}>
-            <div className="d-flex flex-column min-vh-100">
-                <Routes>
+            <Routes>
+                <Route element={<AppLayout />}>
                     <Route index element={<Navigate to="/riskfocus" replace />} />
                     <Route path="/riskfocus" element={<MainPage />} />
+                </Route>
 
-                    <Route
-                        path="*"
-                        element={<Navigate to="/riskfocus" replace />}
-                    />
-                </Routes>
+                <Route path="/complete-report/:idReport" element={<CompleteReportPage />} />
 
-                <Footer />
-            </div>
+                <Route
+                    path="*"
+                    element={<Navigate to="/riskfocus" replace />}
+                />
+            </Routes>
         </QueryClientProvider>
+    );
+
+}
+
+export const AppLayout = () => {
+
+    return (
+        <div className="d-flex flex-column min-vh-100">
+            <Outlet />
+            <Footer />
+        </div>
     );
 
 }
