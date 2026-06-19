@@ -15,8 +15,9 @@ export const CompleteReportPage = () => {
     const navigate = useNavigate();
     const printRef = useRef(null);
     const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
+    const [isGeneratingExcel, setIsGeneratingExcel] = useState(false);
 
-    const { useGetById } = useReportQuery();
+    const { useGetById, downloadExcel } = useReportQuery();
     const { data: report, isLoading } = useGetById(idReport);
 
     const reportToShow = report?.at(0);
@@ -65,6 +66,15 @@ export const CompleteReportPage = () => {
         }
     };
 
+    const handleDownloadExcel = async () => {
+        setIsGeneratingExcel(true);
+        try {
+            await downloadExcel(idReport);
+        } finally {
+            setIsGeneratingExcel(false);
+        }
+    };
+
     if (isLoading) {
         return (
             <div className="d-flex justify-content-center align-items-center" style={{ height: '80vh' }}>
@@ -102,24 +112,44 @@ export const CompleteReportPage = () => {
                     <h2 className="mb-0 text-dark fw-bold">Vista de Impresión</h2>
                 </div>
 
-                <button
-                    className="btn btn-danger d-flex align-items-center gap-2 shadow-sm"
-                    onClick={handleDownloadPDF}
-                    disabled={isGeneratingPDF}
-                    style={{ borderRadius: '8px' }}
-                >
-                    {isGeneratingPDF ? (
-                        <>
-                            <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                            Generando PDF...
-                        </>
-                    ) : (
-                        <>
-                            <i className="bi bi-file-earmark-pdf-fill"></i>
-                            Descargar PDF
-                        </>
-                    )}
-                </button>
+                <div className="d-flex align-items-center gap-2">
+                    <button
+                        className="btn btn-success d-flex align-items-center gap-2 shadow-sm"
+                        onClick={handleDownloadExcel}
+                        disabled={isGeneratingExcel}
+                        style={{ borderRadius: '8px' }}
+                    >
+                        {isGeneratingExcel ? (
+                            <>
+                                <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                Generando Excel...
+                            </>
+                        ) : (
+                            <>
+                                <i className="bi bi-file-earmark-excel-fill"></i>
+                                Descargar Excel
+                            </>
+                        )}
+                    </button>
+                    <button
+                        className="btn btn-danger d-flex align-items-center gap-2 shadow-sm"
+                        onClick={handleDownloadPDF}
+                        disabled={isGeneratingPDF}
+                        style={{ borderRadius: '8px' }}
+                    >
+                        {isGeneratingPDF ? (
+                            <>
+                                <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                Generando PDF...
+                            </>
+                        ) : (
+                            <>
+                                <i className="bi bi-file-earmark-pdf-fill"></i>
+                                Descargar PDF
+                            </>
+                        )}
+                    </button>
+                </div>
             </div>
 
             {/* Contenedor que simula la hoja A4 y envuelve las áreas imprimibles */}
