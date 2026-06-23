@@ -91,6 +91,24 @@ export const useReportMutation = () => {
         onSuccess(data) {
             patchAllLists((curr) => curr?.map(it => it.idReport === data.idReport ? data : it));
             qc.invalidateQueries({ queryKey: reportKeys.reports() });
+
+            const { reportToken, plant } = data;
+            if (reportToken) {
+                const today = new Date();
+                const formattedDate = `${today.getDate()}-${today.getMonth() + 1}-${today.getFullYear()}`;
+                const plantName = plant?.namePlant || 'Reporte';
+
+                const content = `// IMPORTANTE: Por favor, guarde este archivo .txt de manera segura.\n\nToken: ${reportToken}\nFecha de generacion: ${today.toLocaleDateString()}`;
+                const blob = new Blob([content], { type: "text/plain" });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement("a");
+                link.href = url;
+                link.download = `${plantName}_token_${formattedDate}.txt`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+            }
         },
 
         async onSettled() {
