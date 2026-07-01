@@ -3,7 +3,7 @@ import { useState } from "react";
 export const ReportCard = ({ report, setView }) => {
 
     const [isHovered, setIsHovered] = useState(false);
-    const threats = report?.topFiveHazards || [];
+    const threats = report?.topTenHazards || [];
     const stage = report?.report?.stage;
 
     const stageMapping = {
