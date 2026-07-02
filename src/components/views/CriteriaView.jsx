@@ -61,7 +61,7 @@ export const CriteriaView = ({ report, onClose, isCreatingReport, onImpactChange
             </div>
 
             {/* Tab Content */}
-            <div className="flex-grow-1 overflow-hidden d-flex flex-column">
+            <div className="flex-grow-1 d-flex flex-column" style={{ minHeight: 0, overflowY: 'auto' }}>
                 {activeTab === 'impact' ? (
                     <ImpactCriteriaView report={report} onClose={onClose} isCreatingReport={isCreatingReport} onCriteriaChange={onImpactChange} />
                 ) : (

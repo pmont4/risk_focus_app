@@ -116,14 +116,14 @@ export const ImpactCriteriaView = ({ report, onClose, isCreatingReport, onCriter
             </div>
 
             {/* Main Content: Table structure */}
-            <div className="flex-grow-1 p-4" style={{ overflowY: 'auto', backgroundColor: '#f8f9fa' }}>
-                <div className="card shadow-sm border-0" style={{ borderRadius: '12px', overflow: 'hidden' }}>
+            <div className="flex-grow-1 p-4" style={{ backgroundColor: '#f8f9fa' }}>
+                <div className="card shadow-sm border-0 h-100 d-flex flex-column" style={{ borderRadius: '12px', overflow: 'hidden' }}>
                     <div className="card-header bg-white border-bottom py-3 d-flex align-items-center">
                         <i className="bi bi-table text-primary fs-5 me-2"></i>
                         <h5 className="mb-0 fw-bold">Matriz de Criterios</h5>
                     </div>
 
-                    <div className="table-responsive">
+                    <div className="table-responsive flex-grow-1" style={{ minHeight: 0, overflowY: 'auto' }}>
                         <table className="table table-bordered mb-0 align-middle" style={{ minWidth: '800px' }}>
                             <thead className="table-light">
                                 <tr>
@@ -150,7 +150,7 @@ export const ImpactCriteriaView = ({ report, onClose, isCreatingReport, onCriter
                                             <td key={impact.key} className="p-2 bg-white align-middle">
                                                 <textarea
                                                     className="form-control bg-light border-0"
-                                                    rows="3"
+                                                    rows="2"
                                                     placeholder={`Ingrese el ${impact.label.toLowerCase()}...`}
                                                     value={criteriaData[level.key]?.[impact.key] || ''}
                                                     onChange={(e) => handleInputChange(level.key, impact.key, e.target.value)}

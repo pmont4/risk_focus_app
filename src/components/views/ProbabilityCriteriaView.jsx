@@ -112,15 +112,15 @@ export const ProbabilityCriteriaView = ({ report, onClose, isCreatingReport, onC
             </div>
 
             {/* Main Content: Table structure */}
-            <div className="flex-grow-1 p-4" style={{ overflowY: 'auto', backgroundColor: '#f8f9fa' }}>
+            <div className="flex-grow-1 p-4" style={{ backgroundColor: '#f8f9fa' }}>
                 <div className="card shadow-sm border-0 h-100 d-flex flex-column" style={{ borderRadius: '12px', overflow: 'hidden' }}>
                     <div className="card-header bg-white border-bottom py-3 d-flex align-items-center">
                         <i className="bi bi-table text-primary fs-5 me-2"></i>
                         <h5 className="mb-0 fw-bold">Matriz de Probabilidad</h5>
                     </div>
 
-                    <div className="table-responsive flex-grow-1">
-                        <table className="table table-bordered mb-0 align-middle h-100" style={{ minWidth: '800px' }}>
+                    <div className="table-responsive flex-grow-1" style={{ minHeight: 0, overflowY: 'auto' }}>
+                        <table className="table table-bordered mb-0 align-middle" style={{ minWidth: '600px', tableLayout: 'fixed' }}>
                             <thead className="table-light">
                                 <tr>
                                     <th scope="col" className="text-center" style={{ width: '16%', minWidth: '120px' }}>Estimación</th>
@@ -132,7 +132,7 @@ export const ProbabilityCriteriaView = ({ report, onClose, isCreatingReport, onC
                                 {levels.map((level) => (
                                     <tr key={level.key}>
                                         <td className="text-center align-middle" style={{ backgroundColor: level.bg, borderBottom: `2px solid ${level.border}` }}>
-                                            <div className="d-flex flex-column align-items-center justify-content-center gap-2 py-3">
+                                            <div className="d-flex flex-column align-items-center justify-content-center gap-1 py-1 h-100">
                                                 <i className={`bi ${level.icon}`} style={{ fontSize: '1.8rem', color: level.color }}></i>
                                                 <span className="fw-bold" style={{ fontSize: '1.1rem', color: level.color }}>
                                                     {level.label}
@@ -141,19 +141,18 @@ export const ProbabilityCriteriaView = ({ report, onClose, isCreatingReport, onC
                                         </td>
                                         {fields.map((field) => (
                                             <td key={field.key} className="p-3 bg-white">
-                                                <div className="form-group h-100">
                                                     <textarea
                                                         className="form-control bg-light border-0"
-                                                        rows="3"
+                                                        rows="2"
                                                         placeholder={`Ingrese ${field.label.toLowerCase()}...`}
                                                         value={criteriaData[level.key]?.[field.key] || ''}
                                                         onChange={(e) => handleInputChange(level.key, field.key, e.target.value)}
                                                         style={{
-                                                            resize: 'none',
+                                                            resize: 'vertical',
                                                             borderRadius: '8px',
                                                             fontSize: '0.9rem',
                                                             boxShadow: 'inset 0 1px 2px rgba(0,0,0,.075)',
-                                                            height: '100%'
+                                                            width: '100%'
                                                         }}
                                                         onFocus={(e) => {
                                                             e.target.classList.remove('bg-light', 'border-0');
@@ -166,7 +165,6 @@ export const ProbabilityCriteriaView = ({ report, onClose, isCreatingReport, onC
                                                             e.target.style.border = 'none';
                                                         }}
                                                     />
-                                                </div>
                                             </td>
                                         ))}
                                     </tr>
