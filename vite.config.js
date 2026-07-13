@@ -25,6 +25,11 @@ export default defineConfig(({ mode }) => {
           target: env.REACT_APP_API_URL || 'http://localhost:8080',
           changeOrigin: true,
           secure: false,
+        },
+        '/riskfocusauth/': {
+          target: env.REACT_APP_AUTH_API_URL || 'http://localhost:8081',
+          changeOrigin: true,
+          secure: false,
         }
       }
     }

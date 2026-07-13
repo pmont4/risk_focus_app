@@ -17,3 +17,9 @@ export const plantAPI = axios.create({
 export const hazardsAPI = axios.create({
     baseURL: BASE_URL + "hazard/"
 });
+
+const BASE_URL_AUTH = "/riskfocusauth/"
+
+export const logInAPI = axios.create({
+    baseURL: BASE_URL_AUTH + "login/"
+})

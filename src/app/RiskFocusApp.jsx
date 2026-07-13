@@ -3,6 +3,10 @@ import { MainPage } from "../pages/MainPage";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Footer } from "../components/Footer";
 import { CompleteReportPage } from "../pages/completeReport/CompleteReportPage";
+import { useContext, useEffect } from "react";
+import { LogInContext } from "../context/LogInContext";
+import { LogInRouteElement } from "./LogInRouteElement";
+import { RequireAuth } from "./RequireAuth";
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -12,19 +16,35 @@ const queryClient = new QueryClient({
 
 export const RiskFocusApp = () => {
 
+    const {
+        session,
+        reHidratateSession
+    } = useContext(LogInContext);
+
+    useEffect(() => {
+        reHidratateSession();
+    }, []);
+
     return (
         <QueryClientProvider client={queryClient}>
             <Routes>
-                <Route element={<AppLayout />}>
-                    <Route index element={<Navigate to="/riskfocus" replace />} />
-                    <Route path="/riskfocus" element={<MainPage />} />
-                </Route>
+                <Route
+                    path="/login"
+                    element={<LogInRouteElement />}
+                />
 
-                <Route path="/complete-report/:idReport" element={<CompleteReportPage />} />
+                <Route element={<RequireAuth isAuthed={!!session} />}>
+                    <Route element={<AppLayout />}>
+                        <Route index element={<Navigate to="/riskfocus" replace />} />
+                        <Route path="/riskfocus" element={<MainPage />} />
+                    </Route>
+
+                    <Route path="/complete-report/:idReport" element={<CompleteReportPage />} />
+                </Route>
 
                 <Route
                     path="*"
-                    element={<Navigate to="/riskfocus" replace />}
+                    element={<Navigate to={!!session ? "/riskfocus" : "/login"} replace />}
                 />
             </Routes>
         </QueryClientProvider>
