@@ -14,19 +14,19 @@ export default defineConfig(({ mode }) => {
       babel({ presets: [reactCompilerPreset()] })
     ],
     envDir: externalEnvDir,
-    base: '/',
+    base: '/riskfocus/',
     build: {
       outDir: 'dist'
     },
     server: {
       port: parseInt(env.REACT_APP_PORT) || 5173,
       proxy: {
-        '/riskfocus/': {
+        '/api/riskfocus/': {
           target: env.REACT_APP_API_URL || 'http://localhost:8080',
           changeOrigin: true,
           secure: false,
         },
-        '/riskfocusauth/': {
+        '/api/riskfocusauth/': {
           target: env.REACT_APP_AUTH_API_URL || 'http://localhost:8081',
           changeOrigin: true,
           secure: false,

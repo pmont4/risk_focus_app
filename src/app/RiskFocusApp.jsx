@@ -35,8 +35,8 @@ export const RiskFocusApp = () => {
 
                 <Route element={<RequireAuth isAuthed={!!session} />}>
                     <Route element={<AppLayout />}>
-                        <Route index element={<Navigate to="/riskfocus" replace />} />
-                        <Route path="/riskfocus" element={<MainPage />} />
+                        <Route index element={<Navigate to="/main" replace />} />
+                        <Route path="/main" element={<MainPage />} />
                     </Route>
 
                     <Route path="/complete-report/:idReport" element={<CompleteReportPage />} />
@@ -44,7 +44,7 @@ export const RiskFocusApp = () => {
 
                 <Route
                     path="*"
-                    element={<Navigate to={!!session ? "/riskfocus" : "/login"} replace />}
+                    element={<Navigate to={!!session ? "/main" : "/login"} replace />}
                 />
             </Routes>
         </QueryClientProvider>
