@@ -156,7 +156,8 @@ export const ReportCard = ({ report, setView }) => {
                                 const id = report?.report?.idReport;
                                 if (!id) return;
 
-                                window.open(`/complete-report/${id}`, "_blank", "noopener,noreferrer")
+                                const baseUrl = import.meta.env.BASE_URL || '/';
+                                window.open(`${baseUrl}complete-report/${id}`.replace('//', '/'), "_blank", "noopener,noreferrer")
                             }
                         }}
                     >
