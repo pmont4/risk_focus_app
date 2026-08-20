@@ -22,7 +22,7 @@ jobs:
                 cache: 'npm'
             
             - name: install-dependencies
-              run: npm ci
+              run: npm install
 
             - name: build_vite_bundle
               run: npm run build
